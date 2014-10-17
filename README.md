@@ -78,7 +78,7 @@ get用来从D中读取数据，共有1个参数。
 
 	D.sub(event, key, callback);
 
-- event 订阅的事件 add，delete，update，get，set（增，删，改，查，设置），必须
+- event 订阅的事件 add，delete，update，set（增，删，改，设置），必须
 - key 订阅事件的key值，必须
 - callback 事件出发时的回调函数，会传入event参数，包括type，key，ns，和data的深拷贝,必须
 
@@ -89,10 +89,6 @@ get用来从D中读取数据，共有1个参数。
 	D.sub('update', 'a', function (e) {console.log(e)});//当a被更新时触发
 	D.sub('get', 'a', function (e) {console.log(e)});//当a被获取时触发
 	D.sub('set', 'a', function (e) {console.log(e)});//当a被设置时触发
-
-##实战
-
-加入我们有模块A和B，其中A和B
 
 ##作者
 
