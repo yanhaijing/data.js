@@ -54,7 +54,7 @@
         return target;
     }
     function parseKey(key) {
-        return key.split(key);
+        return key.split('.');
     }
     
     function cloneDeep(src) {
