@@ -1,4 +1,4 @@
-var D = Data.D;
+var D = Data;
 
 module('Module has');
 QUnit.test( "测试has接口", function( assert ) {
@@ -80,4 +80,16 @@ QUnit.test( "测试unsub接口", function( assert ) {
     D.unsub('set', 'm', eid);
     D.set('m', 2);
     assert.ok( typeof eid === 'number', "typeof eid === 'number' Passed!" );
+});
+
+module('Module new Data');
+QUnit.test( "测试new Data", function( assert ) {
+    var A = new Data();
+    var B = new Data();
+    
+    A.set('a', 123);
+    B.set('a', 456);
+    
+    assert.ok(A.get('a') === 123, "A.get('a') === 123 Passed!");
+    assert.ok(B.get('a') === 456, "B.get('a') === 456 Passed!");
 });

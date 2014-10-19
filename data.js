@@ -2,8 +2,7 @@
  * @author yanhaijing
  */
 (function (root, factory) {
-    var Data = factory();
-    Data.D = new Data();
+    var Data = factory(root);
     if ( typeof define === 'function' && define.amd) {
         // AMD
         define('data', function() {
@@ -25,7 +24,7 @@
         };
         root.Data = Data;
     }
-}(this, function () {
+}(this, function (root) {
     'use strict';
     var slice = [].slice;
     var obj = {};
@@ -107,14 +106,18 @@
             }
         }
     }
+    
+    //Data构造函数
     var Data = function () {
+        if (!(this instanceof Data)) {
+            return new Data();
+        }
         this._init();
     };
     
-    
+    //扩展Data原型
     extendDeep(Data.prototype, {
         _init: function () {
-            this.version = '0.1.0';
             this._context = {};
             this._events = {
                 'set': {},
@@ -230,6 +233,29 @@
             delete events[key][eid];
             
             return true;
+        }
+    });
+    
+    //新建默认数据中心
+    var data = Data();
+    
+    //扩展Data接口
+    extendDeep(Data, {
+        version: '0.1.0',
+        has: function (key) {
+            return data.has(key);
+        },
+        get: function (key) {
+            return data.get(key);
+        },
+        set: function (key, val) {
+            return data.set(key, val);
+        },
+        sub: function (event, key, callback) {
+            return data.sub(event, key, callback);
+        },
+        unsub: function (event, key, eid) {
+            return data.unsub(event, key, eid);
         }
     });
     

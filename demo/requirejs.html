@@ -7,7 +7,7 @@
         Remove this if you use the .htaccess -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-        <title>index</title>
+        <title>requirejs</title>
         <meta name="description" content="">
         <meta name="author" content="yanxuefeng">
 
@@ -19,9 +19,15 @@
     </head>
 
     <body>
-        <script src="../data.js"></script>
+        <script src="js/require.js"></script>
         <script>
-            D.set('a.b.c', 123);
+            requirejs.config({
+                baseUrl: '../',
+            });
+            require(['data'], function (Data) {
+                Data.set('a', 123);
+                console.log(Data.get('a'));
+            });
         </script>
     </body>
 </html>
