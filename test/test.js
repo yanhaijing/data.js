@@ -1,5 +1,13 @@
-module('Module Set');
 var D = Data.D;
+
+module('Module has');
+QUnit.test( "测试has接口", function( assert ) {
+    assert.ok(D.has('a') === false, "D.has('a') === false Passed!");
+    D.set('a', 123);
+    assert.ok(D.has('a') === true, "D.has('a') === true Passed!");
+});
+
+module('Module Set');
 QUnit.test( "测试set接口", function( assert ) {
     D.set('a', 1);
     assert.ok( D.get('a') === 1, "Passed!" );
@@ -38,7 +46,38 @@ QUnit.test( "测试get接口", function( assert ) {
 
 module('Module sub');
 QUnit.test( "测试sub接口", function( assert ) {
-    // D.set('a');
-    // D.sub()
-    // assert.ok( D.get('a') === undefined, "Passed!" );
+    D.set('a');
+    D.sub('set', 'a', function (e) {
+        assert.ok( e.type === 'set', "e.type === 'set' Passed!" );
+        assert.ok( e.key === 'a', "e.key === 'a' Passed!" );
+        assert.ok( e.data === 1, "e.data === 1 Passed!" );
+    });
+    D.sub('add', 'a', function (e) {
+        assert.ok( e.type === 'add', "e.type === 'add' Passed!" );
+        assert.ok( e.key === 'a', "e.key === 'a' Passed!" );
+        assert.ok( e.data === 1, "e.data === 1 Passed!" );
+    });
+    D.sub('update', 'a', function (e) {
+        assert.ok( e.type === 'update', "e.type === 'update' Passed!" );
+        assert.ok( e.key === 'a', "e.key === 'a' Passed!" );
+        assert.ok( e.data === 1, "e.data === 1 Passed!" );
+    });
+    D.set('a', 1);
+    D.set('a', 1);
+    
+    D.sub('set', 'b.c.d', function (e) {
+        assert.ok( e.data === 123, "e.data === 123 Passed!" );
+    });
+    D.set('b.c.d', 123);
+});
+
+module('Module unsub');
+QUnit.test( "测试unsub接口", function( assert ) {
+    var eid = D.sub('set', 'm', function (e) {
+        assert.ok( e.type === 'set', "e.type === 'set' Passed!" );
+    });
+    D.set('m', 1);
+    D.unsub('set', 'm', eid);
+    D.set('m', 2);
+    assert.ok( typeof eid === 'number', "typeof eid === 'number' Passed!" );
 });

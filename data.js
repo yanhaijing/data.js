@@ -115,8 +115,8 @@
     extendDeep(Data.prototype, {
         _init: function () {
             this.version = '0.1.0';
-            this.context = {};
-            this.events = {
+            this._context = {};
+            this._events = {
                 'set': {},
                 'delete': {},
                 'add': {},
@@ -136,7 +136,7 @@
             var keys = parseKey(key);
             var len = keys.length;
             var i = 0;
-            var ctx = this.context;
+            var ctx = this._context;
             var nctx;
             var name;
                         
@@ -156,15 +156,15 @@
             name = keys[i];
             
             //派发事件
-            pub(this.events, 'set', key, val);
+            pub(this._events, 'set', key, val);
             
             if (typeof val === 'undefined') {
-                pub(this.events, 'delete', key, val);
+                pub(this._events, 'delete', key, val);
             }
             if (typeof ctx[name] === 'undefined') {
-                pub(this.events, 'add', key, val);
+                pub(this._events, 'add', key, val);
             } else {
-                pub(this.events, 'update', key, val);
+                pub(this._events, 'update', key, val);
             }
             
             ctx[name] = cloneDeep(val);
@@ -180,7 +180,7 @@
             var keys = parseKey(key);
             var len = keys.length;
             var i = 0;
-            var ctx = this.context;
+            var ctx = this._context;
             var name;
             
             for (; i < len; i++) {
@@ -203,20 +203,20 @@
                 return -1;
             }
             
-            var events = this.events[event] || {};
+            var events = this._events[event] || {};
             
             events[key] = events[key] || {};
             
             events[key][euid++] = callback;
             
-            return euid;
+            return euid - 1;
         },
         unsub: function (event, key, eid ) {            
             if (typeof event !== 'string' || typeof key !== 'string') {
                 return false;
             }
             
-            var events = this.events[event] || {};
+            var events = this._events[event] || {};
             
             if (!isObj(events[key])) {
                 return false;
