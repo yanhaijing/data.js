@@ -1,7 +1,31 @@
 /**
  * @author yanhaijing
  */
-;(function (g) {
+(function (root, factory) {
+    var Data = factory();
+    Data.D = new Data();
+    if ( typeof define === 'function' && define.amd) {
+        // AMD
+        define('data', function() {
+            return Data;
+        });
+    } else if ( typeof exports === 'object') {
+        // Node.js
+        module.exports = Data;
+    } else {
+        // Browser globals
+        var _Data = root.Data;
+        
+        Data.noConflict = function () {
+            if (root.Data = Data) {
+                root.Data = _Data;
+            }
+            
+            return Data;
+        };
+        root.Data = Data;
+    }
+}(this, function () {
     'use strict';
     var slice = [].slice;
     var obj = {};
@@ -208,18 +232,6 @@
             return true;
         }
     });
-
-    var _D = g.D;
     
-    var D = new Data();
-    
-    D.noConflict = function () {
-        if (g.D = D) {
-            g.D = _D;
-        }
-        
-        return D;
-    };
-    
-    g.D = D;
-}(typeof window !== "undefined" ? window : this));
+    return Data;//return Data
+}));

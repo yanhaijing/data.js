@@ -1,4 +1,5 @@
 module('Module Set');
+var D = Data.D;
 QUnit.test( "测试set接口", function( assert ) {
     D.set('a', 1);
     assert.ok( D.get('a') === 1, "Passed!" );
