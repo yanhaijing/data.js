@@ -36,7 +36,7 @@
     }
     function isArr(arr) {
         return isFun(Array.isArray) ? 
-            Array.isArray(arr) : toString.call(arg) === '[object Array]';
+            Array.isArray(arr) : toString.call(arr) === '[object Array]';
     }
     function isObj(obj) {
         return typeof obj === 'object' && !isArr(obj);
