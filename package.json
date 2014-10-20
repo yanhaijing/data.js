@@ -1,0 +1,41 @@
+{
+  "name": "data_js",
+  "description": "",
+  "version": "0.1.0-3",
+  "homepage": "https://github.com/yanhaijing/data.js",
+  "author": {
+    "name": "yanhaijing",
+    "email": "yanhaijing@yeah.net",
+    "url": "http://yanhaijing.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yanhaijing/data.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yanhaijing/data.js/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-nodeunit": "~0.3.3",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt": "~0.4.5"
+  },
+  "keywords": [
+    "data",
+    "data.js",
+    "Data"
+  ],
+  "main": "data.js"
+}

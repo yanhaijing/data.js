@@ -1,7 +1,4 @@
-<a href="https://github.com/yanhaijing/data.js">
-  <img src="logo.png" width="100px">
-</a>
-#[data.js](https://github.com/yanhaijing/data.js)
+#[data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js)
 
 data.js是一个微型js库，不仅仅是数据中心，同时是带有消息通知的数据中心，我把她称为活的数据。你不要来问我，我会通知你。
 
