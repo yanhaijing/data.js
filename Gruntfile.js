@@ -1,7 +1,7 @@
 /*
  * https://github.com/yanhaijing/data.js
  *
- * Copyright (c) 2014 yanhaijing
+ * Copyright (c) 2013 yanhaijing
  * Licensed under the MIT license.
  */
 
