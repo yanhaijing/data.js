@@ -15,11 +15,11 @@ data.js 是带有消息通知的数据中心，我把她称为活的数据。旨
 
 - node.js 0.10+
 - Safari 6+ (Mac)
+- iOS 5+ Safari
 - Chrome 23+ (Windows, Mac, Android, iOS, Linux, Chrome OS)
 - Firefox 4+ (Windows, Mac, Android, Linux, Firefox OS)
-iOS 5+ Safari
 - Internet Explorer 6+ (Windows, Windows Phone)
-- Opera 10+
+- Opera 10+ (Windows, linux, Android)
 
 ##使用方法
 
