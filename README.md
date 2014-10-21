@@ -134,6 +134,10 @@ Data.sub('update', 'a', function (e) {console.log(e)});	//当a被更新时触发
 Data.sub('set', 'a', function (e) {console.log(e)});	//当a被设置时触发
 ```
 
+##注意事项
+
+请不要将dom节点或dom list和jquery选择的对象放到Data中，会造成性能的严重下降，和不可预知的问题，建议放入原生数据，对于dom和jquery可传入选择的id或查询字符串。
+
 ##作者
 
 **yanhaijing**
