@@ -33,7 +33,7 @@ iOS 5+ Safari
 
 ###AMD
 
-	//require(['data'], function (Data) {
+	require(['data'], function (Data) {
 		Data.set('a', 123);
 	});
 
