@@ -25,7 +25,7 @@ iOS 5+ Safari
 
 ###传统方法
 
-```javascript	
+```html	
 //在程序的最开始处添加如下js
 <script src="data.js"></script>
 <script>
@@ -74,22 +74,22 @@ Data.set(key, val)
 具体用法如下：
 
 ```javascript
-Data.set('a', 123);//存入数字
-Data.set('a', 'string')//存入字符串
-Data.set('a', {})//存入对象
+Data.set('a', 123);	//存入数字
+Data.set('a', 'string')	//存入字符串
+Data.set('a', {})	//存入对象
 
 //一下两项功能相同
 Data.set(a, 123);
 Data.set({a, 123]);
 
-Data.set('a.b', 123);//设置a下的b，或a不存在则会创建a，若a为原始值此处设置不会报错，也不会生效
+Data.set('a.b', 123);	//设置a下的b，或a不存在则会创建a，若a为原始值此处设置不会报错，也不会生效
 ```
 	
 
 **注意**：data.js会解析 `key`，`key`以点号（.）分隔不同的层级，如下：
 
 ```javascript
-Data.set('a.b.c.d.e.f.g', 123);若不存在的空间会自动创建
+Data.set('a.b.c.d.e.f.g', 123);	// 若不存在的空间会自动创建
 ```
 
 
@@ -106,7 +106,7 @@ Data.get(key);
 具体用法如下：
 
 ```javascript
-Data.get('a');//获取默认命名空间下的a
+Data.get('a');	//获取默认命名空间下的a
 Data.get('a.b');//获取a下的b值
 ```
 
@@ -128,10 +128,10 @@ Data.sub(event, key, callback);
 具体用法如下：
 
 ```javascript
-Data.sub('add', 'a', function (e) {console.log(e)});//当a被加进data时触发
-Data.sub('delete', 'a', function (e) {console.log(e)});//当a被删除时触发
-Data.sub('update', 'a', function (e) {console.log(e)});//当a被更新时触发
-Data.sub('set', 'a', function (e) {console.log(e)});//当a被设置时触发
+Data.sub('add', 'a', function (e) {console.log(e)});	//当a被加进data时触发
+Data.sub('delete', 'a', function (e) {console.log(e)});	//当a被删除时触发
+Data.sub('update', 'a', function (e) {console.log(e)});	//当a被更新时触发
+Data.sub('set', 'a', function (e) {console.log(e)});	//当a被设置时触发
 ```
 
 ##作者
