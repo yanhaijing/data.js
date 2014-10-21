@@ -152,6 +152,10 @@
                 
                 //若不存在对应上下文自动创建
                 if (!isArr(nctx) || !isObj(nctx)) {
+                    //删除操作不存在对应值时，提前退出
+                    if (typeof val === 'undefined') {
+                        return false;
+                    }
                     ctx[name] = {};
                 }
                 
