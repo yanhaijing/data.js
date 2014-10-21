@@ -24,72 +24,91 @@ iOS 5+ Safari
 ##使用方法
 
 ###传统方法
-	
-	//在程序的最开始处添加如下js
-	<script src="data.js"></script>
-	<script>
-		Data.set('a', 123);
-	</script>
+
+```html	
+//在程序的最开始处添加如下js
+<script src="data.js"></script>
+<script>
+	Data.set('a', 123);
+</script>
+```
 
 ###AMD
 
-	require(['data'], function (Data) {
-		Data.set('a', 123);
-	});
+```javascript
+require(['data'], function (Data) {
+	Data.set('a', 123);
+});
+```
 
 ###node.js
-	$ npm install data_js//从npm安装
 
-	*.js
-	var Data = require('data');
-	Data.set('a', 123);
+```
+$ npm install data_js//从npm安装
 
-即可使用data.js,在传统浏览器环境data.js占用全局命名空间Data。
+*.js
+var Data = require('data');
+Data.set('a', 123);
+```
 
-下面的代码均可创建单独的数据中心。当然Data本身已经默认是一个数据中心了，可直接存取数据。
+即可使用data.js,在传统浏览器环境data.js占用全局命名空间 `Data`。
 
-	var A = new Data();
-	var B = Data();
+下面的代码均可创建单独的数据中心。当然 `Data` 本身已经默认是一个数据中心了，可直接存取数据。
+
+```javascript
+var A = new Data();
+var B = Data();
+```
 
 ##set
 	
-set用来向Data中存入数据，有2个参数，纳尼这么多，坑爹呢吧，其实后一个是可选的。
+`set` 用来向 `Data` 中存入数据，有2个参数，纳尼这么多，坑爹呢吧，其实后一个是可选的。
 
-	Data.set(key, val)
+```javascript
+Data.set(key, val)
+```
 
-- key {字符串|对象} 要放到Data上数据的键值，或对象值，必须
-- val {任意值} 要放到Data上的数据，可选，若key为对象，此项可省略，若key为键值，省略的话会删除➹值
+- `key` {字符串|对象} 要放到Data上数据的键值，或对象值，必须
+- `val` {任意值} 要放到Data上的数据，可选，若 `key` 为对象，此项可省略，若 `key` 为键值，省略的话会删除➹值
 
 具体用法如下：
 
-	Data.set('a', 123);//存入数字
-	Data.set('a', 'string')//存入字符串
-	Data.set('a', {})//存入对象
+```javascript
+Data.set('a', 123);	//存入数字
+Data.set('a', 'string')	//存入字符串
+Data.set('a', {})	//存入对象
+
+//一下两项功能相同
+Data.set(a, 123);
+Data.set({a, 123]);
+
+Data.set('a.b', 123);	//设置a下的b，或a不存在则会创建a，若a为原始值此处设置不会报错，也不会生效
+```
 	
-	//一下两项功能相同
-	Data.set(a, 123);
-	Data.set({a, 123]);
 
-	Data.set('a.b', 123);//设置a下的b，或a不存在则会创建a，若a为原始值此处设置不会报错，也不会生效
-	
+**注意**：data.js会解析 `key`，`key`以点号（.）分隔不同的层级，如下：
 
-**注意**：data.js会解析key，key以点号（.）分隔不同的层级，如下：
-
-	Data.set('a.b.c.d.e.f.g', 123);若不存在的空间会自动创建
+```javascript
+Data.set('a.b.c.d.e.f.g', 123);	// 若不存在的空间会自动创建
+```
 
 
 ##get
 
-get用来从Data中读取数据，共有1个参数。
+`get` 用来从Data中读取数据，共有1个参数。
 
-	Data.get(key);
+```javascript
+Data.get(key);
+```
 
 - key {字符串} 要获取Data上数据的键值，必须
 
 具体用法如下：
 
-	Data.get('a');//获取默认命名空间下的a
-	Data.get('a.b');//获取a下的b值
+```javascript
+Data.get('a');	//获取默认命名空间下的a
+Data.get('a.b');//获取a下的b值
+```
 
 **注意：**如果获取的值是对象或者数组，返回的是对象或数组的深拷贝
 
@@ -97,19 +116,23 @@ get用来从Data中读取数据，共有1个参数。
 
 消息系统data.js是核心，毕竟没有消息系统，data.js和全局变量并无两样，通过消息系统，可实现双向通信，当data中的数据有变更时，会发出消息通知，当然，前提是需要订阅才会收到通知。
 
-	Data.sub(event, key, callback);
+```javascript
+Data.sub(event, key, callback);
+```
 
-- event 订阅的事件 add，delete，update，set（增，删，改，设置），必须
-- key 订阅事件的key值，必须
-- callback 事件出发时的回调函数，会传入event参数，包括type，key，和data的深拷贝,必须
+- event 订阅的事件 `add`，`delete`，`update`，`set`（增，删，改，设置），必须
+- key 订阅事件的 `key` 值，必须
+- callback 事件出发时的回调函数，会传入 `event` 参数，包括 `type`，`key`，和data的深拷贝,必须
 - return 事件的eid，用来取消订阅事件用
 
 具体用法如下：
 
-	Data.sub('add', 'a', function (e) {console.log(e)});//当a被加进data时触发
-	Data.sub('delete', 'a', function (e) {console.log(e)});//当a被删除时触发
-	Data.sub('update', 'a', function (e) {console.log(e)});//当a被更新时触发
-	Data.sub('set', 'a', function (e) {console.log(e)});//当a被设置时触发
+```javascript
+Data.sub('add', 'a', function (e) {console.log(e)});	//当a被加进data时触发
+Data.sub('delete', 'a', function (e) {console.log(e)});	//当a被删除时触发
+Data.sub('update', 'a', function (e) {console.log(e)});	//当a被更新时触发
+Data.sub('set', 'a', function (e) {console.log(e)});	//当a被设置时触发
+```
 
 ##作者
 
