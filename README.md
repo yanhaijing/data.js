@@ -41,6 +41,10 @@ require(['data'], function (Data) {
 });
 ```
 
+###bower
+
+	$ bower install data.js
+
 ###node.js
 
 ```
