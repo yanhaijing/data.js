@@ -127,9 +127,12 @@
             };
         },
         set: function (key, val) {
-            if (isObj(key)) {
-                val = key;
-                key = '';
+            var ctx = this._context;
+            
+            //传入一个对象的情况
+            if (isObj(key)) {               
+                extendDeep(ctx, key);
+                return true;
             }
             
             if (typeof key !== 'string') {
@@ -138,8 +141,7 @@
             
             var keys = parseKey(key);
             var len = keys.length;
-            var i = 0;
-            var ctx = this._context;
+            var i = 0;            
             var nctx;
             var name;
                         
