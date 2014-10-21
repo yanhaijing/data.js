@@ -86,7 +86,7 @@
         }
         
         if (isArr(src)){
-            return extendDeep({}, src);
+            return extendDeep([], src);
         }
         
         return src;
