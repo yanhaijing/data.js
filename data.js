@@ -128,10 +128,16 @@
         },
         set: function (key, val) {
             var ctx = this._context;
+            var name;
             
             //传入一个对象的情况
-            if (isObj(key)) {               
-                extendDeep(ctx, key);
+            if (isObj(key)) {     
+                for (name in key) {
+                    if (key.hasOwnProperty(name)) {
+                        this.set(name, key[name]);
+                    }                    
+                }          
+
                 return true;
             }
             
@@ -142,8 +148,7 @@
             var keys = parseKey(key);
             var len = keys.length;
             var i = 0;            
-            var nctx;
-            var name;
+            var nctx;            
                         
             //切换到对应上下文
             for (; i < len - 1; i++) {
