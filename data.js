@@ -169,8 +169,7 @@
             
             if (typeof val === 'undefined') {
                 pub(this._events, 'delete', key, val);
-            }
-            if (typeof ctx[name] === 'undefined') {
+            } else if (typeof ctx[name] === 'undefined') {
                 pub(this._events, 'add', key, val);
             } else {
                 pub(this._events, 'update', key, val);
