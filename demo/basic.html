@@ -21,7 +21,19 @@
     <body>
         <script src="../data.js"></script>
         <script>
-            Data.set('a.b.c', 123);
+            Data.sub('set', 'a', function (e) {
+                console.log(e)}
+            );
+            Data.sub('add', 'a', function (e) {
+                console.log(e)}
+            );
+            Data.sub('update', 'a', function (e) {
+                console.log(e)}
+            );
+            Data.sub('delete', 'a', function (e) {
+                console.log(e)}
+            );
+            Data.set('a', 123);
             console.log(Data.get('a.b.c'));
         </script>
     </body>

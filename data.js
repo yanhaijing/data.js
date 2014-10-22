@@ -104,15 +104,16 @@
                 continue;
             }
             
-            nkey = key + '.' + name;
+            nkey = (typeof key === 'undefined' ? '' : (key + '.')) + name;
+            
             pub(events, 'set', nkey, copy);
             
             if (typeof copy === 'undefined') {
-                pub(events, 'delete', key, copy);
+                pub(events, 'delete', nkey, copy);
             } else if (typeof context[name] === 'undefined') {
-                pub(events, 'add', key, copy);
+                pub(events, 'add', nkey, copy);
             } else {
-                pub(events, 'update', key, copy);
+                pub(events, 'update', nkey, copy);
             }
             
             if (copy && (isObj(copy) || (copyIsArr = isArr(copy)))) {                
@@ -199,7 +200,14 @@
             var i = 0;            
             var nctx;
             var name;
-                        
+            var src;
+
+            if (len < 2) {
+                src = {};
+                src[key] = val;
+                extendData(undefined, this._events, ctx, src);
+                return true;
+            }           
             //切换到对应上下文
             for (; i < len - 1; i++) {
                 name = keys[i];
@@ -217,27 +225,13 @@
                 ctx = ctx[name];
             }
             
-            name = keys[i];
+            name = keys.pop();
+
+            src = isArr(ctx) ? [] : {};
+
+            src[name] = val;                                   
             
-            //派发事件
-            pub(this._events, 'set', key, val);
-            
-            if (typeof val === 'undefined') {
-                pub(this._events, 'delete', key, val);
-            } else if (typeof ctx[name] === 'undefined') {
-                pub(this._events, 'add', key, val);
-            } else {
-                pub(this._events, 'update', key, val);
-            }
-            
-            if (isObj(val)) {
-                ctx[name] = extendData(key, this._events, ctx, val);
-            }
-            
-            if (isArr(src)){
-                return extendDeep([], src);
-            }
-            ctx[name] = cloneDeep(val);
+            ctx = extendData(keys.join('.'), this._events, ctx, src);            
             
             return true;
         },
