@@ -41,11 +41,27 @@
     function isObj(obj) {
         return typeof obj === 'object' && !isArr(obj);
     }
+    function extend() {
+        var target = arguments[0] || {};
+        var arrs = slice.call(arguments, 1);
+        var len = arrs.length;
+
+        for (var i = 0; i < len; i++) {
+            var arr = arrs[i];
+            for (var name in arr) {               
+                target[name] = arr[name];
+            }
+
+        }
+
+        return target;
+    }
     function extendDeep() {
         var target = arguments[0] || {};
         var arrs = slice.call(arguments, 1);
         var len = arrs.length;
         var copyIsArr;
+        var clone;
 
         for (var i = 0; i < len; i++) {
             var arr = arrs[i];
@@ -61,10 +77,10 @@
                 if (copy && (isObj(copy) || (copyIsArr = isArr(copy)))) {
                     if (copyIsArr) {
                         copyIsArr = false;
-                        var clone = src && isArr(src) ? src : [];
+                        clone = src && isArr(src) ? src : [];
 
                     } else {
-                        var clone = src && isObj(src) ? src : {};
+                        clone = src && isObj(src) ? src : {};
                     }
                     target[ name ] = extendDeep(clone, copy);
                 } else if (typeof copy !== 'undefined'){
@@ -75,6 +91,45 @@
         }
 
         return target;
+    }
+    
+    function extendData(key, events, context, src) {
+        var nkey;
+        for (var name in src) {
+            var ctx = context[name];
+            var copy = src[name];
+            var copyIsArr;
+            //避免无限循环
+            if (context === copy) {
+                continue;
+            }
+            
+            nkey = key + '.' + name;
+            pub(events, 'set', nkey, copy);
+            
+            if (typeof copy === 'undefined') {
+                pub(events, 'delete', key, copy);
+            } else if (typeof context[name] === 'undefined') {
+                pub(events, 'add', key, copy);
+            } else {
+                pub(events, 'update', key, copy);
+            }
+            
+            if (copy && (isObj(copy) || (copyIsArr = isArr(copy)))) {                
+                if (copyIsArr) {
+                    copyIsArr = false;
+                    context[name] = ctx && isArr(ctx) ? ctx : [];
+
+                } else {
+                    context[name] = ctx && isObj(ctx) ? ctx : {};
+                }
+                context[name] = extendData(nkey, events, context[name], copy);
+            } else {                
+                context[name] = copy;
+            }
+        }
+        
+        return context;
     }
     function parseKey(key) {
         return key.split('.');
@@ -116,7 +171,7 @@
     };
     
     //扩展Data原型
-    extendDeep(Data.prototype, {
+    extend(Data.prototype, {
         _init: function () {
             this._context = {};
             this._events = {
@@ -131,7 +186,7 @@
             
             //传入一个对象的情况
             if (isObj(key)) {               
-                extendDeep(ctx, key);
+                extendData(undefined, this._events, ctx, key);
                 return true;
             }
             
@@ -169,13 +224,19 @@
             
             if (typeof val === 'undefined') {
                 pub(this._events, 'delete', key, val);
-            }
-            if (typeof ctx[name] === 'undefined') {
+            } else if (typeof ctx[name] === 'undefined') {
                 pub(this._events, 'add', key, val);
             } else {
                 pub(this._events, 'update', key, val);
             }
             
+            if (isObj(val)) {
+                ctx[name] = extendData(key, this._events, ctx, val);
+            }
+            
+            if (isArr(src)){
+                return extendDeep([], src);
+            }
             ctx[name] = cloneDeep(val);
             
             return true;
@@ -243,10 +304,10 @@
     });
     
     //新建默认数据中心
-    var data = Data();
+    var data = new Data();
     
     //扩展Data接口
-    extendDeep(Data, {
+    extend(Data, {
         version: '0.1.0',
         has: function (key) {
             return data.has(key);
