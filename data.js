@@ -46,6 +46,7 @@
         var arrs = slice.call(arguments, 1);
         var len = arrs.length;
         var copyIsArr;
+        var clone;
 
         for (var i = 0; i < len; i++) {
             var arr = arrs[i];
@@ -61,10 +62,10 @@
                 if (copy && (isObj(copy) || (copyIsArr = isArr(copy)))) {
                     if (copyIsArr) {
                         copyIsArr = false;
-                        var clone = src && isArr(src) ? src : [];
+                        clone = src && isArr(src) ? src : [];
 
                     } else {
-                        var clone = src && isObj(src) ? src : {};
+                        clone = src && isObj(src) ? src : {};
                     }
                     target[ name ] = extendDeep(clone, copy);
                 } else if (typeof copy !== 'undefined'){
@@ -76,6 +77,47 @@
 
         return target;
     }
+    
+    function extendData(key, events, context, src) {
+        var nkey;
+        for (var name in src) {
+            var ctx = context[name];
+            var copy = src[name];
+            var copyIsArr;
+            //避免无限循环
+            if (context === copy) {
+                continue;
+            }
+            
+            nkey = (typeof key === 'undefined' ? '' : (key + '.')) + name;
+            
+            pub(events, 'set', nkey, copy);
+            
+            if (typeof copy === 'undefined') {
+                pub(events, 'delete', nkey, copy);
+            } else if (typeof context[name] === 'undefined') {
+                pub(events, 'add', nkey, copy);
+            } else {
+                pub(events, 'update', nkey, copy);
+            }
+            
+            if (copy && (isObj(copy) || (copyIsArr = isArr(copy)))) {                
+                if (copyIsArr) {
+                    copyIsArr = false;
+                    context[name] = ctx && isArr(ctx) ? ctx : [];
+
+                } else {
+                    context[name] = ctx && isObj(ctx) ? ctx : {};
+                }
+                context[name] = extendData(nkey, events, context[name], copy);
+            } else {                
+                context[name] = copy;
+            }
+        }
+        
+        return context;
+    }
+    
     function parseKey(key) {
         return key.split('.');
     }
@@ -127,17 +169,11 @@
             };
         },
         set: function (key, val) {
-            var ctx = this._context;
-            var name;
+            var ctx = this._context;            
             
             //传入一个对象的情况
             if (isObj(key)) {     
-                for (name in key) {
-                    if (key.hasOwnProperty(name)) {
-                        this.set(name, key[name]);
-                    }                    
-                }          
-
+                extendData(undefined, this._events, ctx, key);
                 return true;
             }
             
@@ -147,16 +183,24 @@
             
             var keys = parseKey(key);
             var len = keys.length;
-            var i = 0;            
-            var nctx;            
+            var i = 0; 
+            var name; 
+            var src;
+            
+            //键值为 单个的情况      
+            if (len < 2) {
+                src = {};
+                src[key] = val;
+                extendData(undefined, this._events, ctx, src);
+                return true;
+            } 
                         
             //切换到对应上下文
             for (; i < len - 1; i++) {
                 name = keys[i];
-                nctx = ctx[name];
                 
                 //若不存在对应上下文自动创建
-                if (!isArr(nctx) && !isObj(nctx)) {
+                if (!isArr(ctx[name]) && !isObj(ctx[name])) {
                     //删除操作不存在对应值时，提前退出
                     if (typeof val === 'undefined') {
                         return false;
@@ -167,20 +211,13 @@
                 ctx = ctx[name];
             }
             
-            name = keys[i];
+            name = keys.pop();
+
+            src = isArr(ctx) ? [] : {};
+
+            src[name] = val;                                   
             
-            //派发事件
-            pub(this._events, 'set', key, val);
-            
-            if (typeof val === 'undefined') {
-                pub(this._events, 'delete', key, val);
-            } else if (typeof ctx[name] === 'undefined') {
-                pub(this._events, 'add', key, val);
-            } else {
-                pub(this._events, 'update', key, val);
-            }
-            
-            ctx[name] = cloneDeep(val);
+            ctx = extendData(keys.join('.'), this._events, ctx, src);
             
             return true;
         },
@@ -247,7 +284,7 @@
     });
     
     //新建默认数据中心
-    var data = Data();
+    var data = new Data();
     
     //扩展Data接口
     extendDeep(Data, {

@@ -33,6 +33,12 @@ QUnit.test( "测试set接口", function( assert ) {
     
     D.set('1.+-*/!@#$%^&()', 1);
     assert.ok( D.get('1.+-*/!@#$%^&()') === 1, "Passed!" );
+    
+    D.set('a');
+    D.set('a', {b: 1});
+    D.set({a: {c: 1}});
+    assert.ok( D.get('a.b') === 1, "Passed!" );
+    assert.ok( D.get('a.c') === 1, "Passed!" );
 });
 
 module('Module get');
@@ -69,6 +75,7 @@ QUnit.test( "测试sub接口", function( assert ) {
         assert.ok( e.data === 123, "e.data === 123 Passed!" );
     });
     D.set('b.c.d', 123);
+    D.set('b.c', {d: 123});
 });
 
 module('Module unsub');
