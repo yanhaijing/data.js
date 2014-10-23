@@ -186,7 +186,6 @@
             var i = 0; 
             var name; 
             var src;
-            
             //键值为 单个的情况      
             if (len < 2) {
                 src = {};
@@ -205,9 +204,10 @@
                     if (typeof val === 'undefined') {
                         return false;
                     }
-                    ctx[name] = {};
+                    //若键值为数组则新建数组，否则新建对象
+                    ctx[name] = isNaN(Number(name)) ? {} : [];               
                 }
-                
+
                 ctx = ctx[name];
             }
             
@@ -222,9 +222,9 @@
             return true;
         },
         get: function (key) {
-            //key不为字符串返回null
+            //key不为字符串返回undefined
             if (typeof key !== 'string') {
-                return false;
+                return undefined;
             }
             
             var keys = parseKey(key);
@@ -248,12 +248,12 @@
         has: function (key) {
             return typeof  this.get(key) === 'undefined' ? false : true;
         },
-        sub: function (event, key, callback) {
-            if (typeof event !== 'string' || typeof key !== 'string' || !isFun(callback)) {
+        sub: function (type, key, callback) {
+            if (typeof type !== 'string' || typeof key !== 'string' || !isFun(callback)) {
                 return -1;
             }
             
-            var events = this._events[event] || {};
+            var events = this._events[type] || {};
             
             events[key] = events[key] || {};
             
@@ -261,23 +261,23 @@
             
             return euid - 1;
         },
-        unsub: function (event, key, eid ) {            
-            if (typeof event !== 'string' || typeof key !== 'string') {
+        unsub: function (type, key, id ) {            
+            if (typeof type !== 'string' || typeof key !== 'string') {
                 return false;
             }
             
-            var events = this._events[event] || {};
+            var events = this._events[type] || {};
             
             if (!isObj(events[key])) {
                 return false;
             }
             
-            if (typeof eid !== 'number') {
+            if (typeof id !== 'number') {
                 delete events[key];               
                 return true;
             }
             
-            delete events[key][eid];
+            delete events[key][id];
             
             return true;
         }
@@ -298,11 +298,11 @@
         set: function (key, val) {
             return data.set(key, val);
         },
-        sub: function (event, key, callback) {
-            return data.sub(event, key, callback);
+        sub: function (type, key, callback) {
+            return data.sub(type, key, callback);
         },
-        unsub: function (event, key, eid) {
-            return data.unsub(event, key, eid);
+        unsub: function (type, key, id) {
+            return data.unsub(type, key, id);
         }
     });
     
