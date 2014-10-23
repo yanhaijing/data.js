@@ -288,7 +288,7 @@
     
     //扩展Data接口
     extendDeep(Data, {
-        version: '0.1.0',
+        version: '0.2.0',
         has: function (key) {
             return data.has(key);
         },
