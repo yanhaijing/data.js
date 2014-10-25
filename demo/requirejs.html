@@ -24,8 +24,10 @@
             requirejs.config({
                 baseUrl: '../',
             });
-            require(['data'], function (Data) {
+            define('a', ['data'], function (Data) {
                 Data.set('a', 123);
+            });
+            require(['data', 'a'], function (Data) {
                 console.log(Data.get('a'));
             });
         </script>
