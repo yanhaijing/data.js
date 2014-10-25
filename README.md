@@ -75,6 +75,10 @@ Data.get('a');//读取数据
 
 data.js的代码经过完整的单元测试，并使用travis保证，可放心使用。测试代码见test目录下。
 
+##贡献代码
+
+如果你想为data.js贡献代码，请采用fork + pull request 方式，并在发起pr前先将master上超前的代码rebase到自己的分之上。
+
 ##作者
 
 **yanhaijing**
