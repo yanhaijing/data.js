@@ -53,9 +53,9 @@ Data.set('a', 123);
 
 即可使用data.js,在传统浏览器环境data.js占用全局命名空间 `Data`。
 
-##DEMO
+##快速开始
 
-接口简洁，使用简单：
+Data常用接口只有三个，非常简单：
 
 ```javascript
 Data.sub('set', 'a', function (e) {console.log(e.data)});//订阅消息，当a被设置时，会派发消息
@@ -70,6 +70,10 @@ Data.get('a');//读取数据
 ##文档
 
 [API](doc/api.md)
+
+##测试
+
+data.js的代码经过完整的单元测试，并使用travis保证，可放心使用。测试代码见test目录下。
 
 ##作者
 

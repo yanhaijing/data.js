@@ -32,14 +32,14 @@
     var hasOwn = obj.hasOwnProperty;
     var euid = 0;
     function isFun(fn) {
-        return typeof fn === 'function';
+        return toString.call(fn) === "[object Function]";
     }
     function isArr(arr) {
         return isFun(Array.isArray) ? 
             Array.isArray(arr) : toString.call(arr) === '[object Array]';
     }
     function isObj(obj) {
-        return typeof obj === 'object' && !isArr(obj);
+        return toString.call(obj) === "[object Object]";
     }
     function extendDeep() {
         var target = arguments[0] || {};
