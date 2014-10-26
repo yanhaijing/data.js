@@ -79,6 +79,11 @@ data.js的代码运行于ecmascript严格模式下，jshint验证，完整的单
 
 如果你想为data.js贡献代码，请采用fork + pull request 方式，并在发起pr前先将master上超前的代码rebase到自己的分支上。
 
+在目录运行如下命令，完成验证测试编译过程，确保无误：
+
+	$ npm install #安装grunt及其依赖
+	$ grunt
+
 ##作者
 
 **yanhaijing**
