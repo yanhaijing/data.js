@@ -73,7 +73,7 @@ Data.get('a');//读取数据
 
 ##测试
 
-data.js的代码经过完整的单元测试，并使用travis保证，可放心使用。测试代码见test目录下。
+data.js的代码运行于ecmascript严格模式下，jshint验证，完整的单元测试，并使用travis保证。测试代码见test目录下。
 
 ##贡献代码
 
