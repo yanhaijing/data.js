@@ -75,6 +75,13 @@ Data.get('a');//读取数据
 
 data.js的代码运行于ecmascript严格模式下，jshint验证，完整的单元测试，并使用travis保证。测试代码见test目录下。
 
+##性能
+
+data.js的存入和取出，都是对数据的一次深拷贝，同时还要解析数据的键和派发消息，所以性能会有很大损失，但不涉及大批量循环存取不会遇到性能问题。
+
+- [get接口性能](http://jsperf.com/yanhaijing-data-js-get)
+- [set接口性能](http://jsperf.com/yanhaijing-data-js-set)
+
 ##贡献代码
 
 如果你想为data.js贡献代码，请采用fork + pull request 方式，并在发起pr前先将master上超前的代码rebase到自己的分支上。
