@@ -63,12 +63,6 @@ exports.data_js = {
     D.set('1.+-*/!@#$%^&()', 1);
     test.ok( D.get('1.+-*/!@#$%^&()') === 1, "Passed!" );
     
-    D.set('a');
-    D.set('a', {b: 1});
-    D.set({a: {c: 1}});
-    assert.ok( D.get('a.b') === 1, "Passed!" );
-    assert.ok( D.get('a.c') === 1, "Passed!" );
-    
     //======================
     D.set('a');
     assert.ok( D.get('a') === undefined, "Passed!" );

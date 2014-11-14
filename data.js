@@ -173,12 +173,6 @@
         set: function (key, val) {
             var ctx = this._context;            
             
-            //传入一个对象的情况
-            if (isObj(key)) {     
-                extendData(undefined, this._events, ctx, key);
-                return true;
-            }
-            
             if (typeof key !== 'string') {
                 return false;
             }
