@@ -9,7 +9,7 @@ data.js 是带有消息通知的数据中心，我称其为会说话的数据。
 
 ##Compatibility
 
-- node.js 0.10+
+- Node 0.10+
 - Safari 6+ (Mac)
 - iOS 5+ Safari
 - Chrome 23+ (Windows, Mac, Android, iOS, Linux, Chrome OS)
