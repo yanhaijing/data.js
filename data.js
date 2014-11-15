@@ -245,11 +245,17 @@
             return typeof  this.get(key) === 'undefined' ? false : true;
         },
         sub: function (type, key, callback) {
+            //参数不合法
             if (typeof type !== 'string' || typeof key !== 'string' || !isFun(callback)) {
                 return -1;
             }
+
+            //不支持的事件
+            if (!(type in this._events)) {
+                return -2;
+            }
             
-            var events = this._events[type] || {};
+            var events = this._events[type];
             
             events[key] = events[key] || {};
             
@@ -257,12 +263,18 @@
             
             return euid - 1;
         },
-        unsub: function (type, key, id ) {            
+        unsub: function (type, key, id ) {   
+            //参数不合法         
             if (typeof type !== 'string' || typeof key !== 'string') {
                 return false;
             }
+
+            //不支持的事件
+            if (!(type in this._events)) {
+                return false;
+            }
             
-            var events = this._events[type] || {};
+            var events = this._events[type];
             
             if (!isObj(events[key])) {
                 return false;
