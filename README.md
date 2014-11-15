@@ -37,7 +37,7 @@ require(['data'], function (Data) {
 });
 ```
 
-###bower
+###Bower
 
 ```bash
 $ bower install data.js
