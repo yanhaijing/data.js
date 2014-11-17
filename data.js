@@ -18,7 +18,7 @@
         var _Data = root.Data;
         
         Data.noConflict = function () {
-            if (root.Data = Data) {
+            if (root.Data === Data) {
                 root.Data = _Data;
             }
             
@@ -284,7 +284,7 @@
     
     //扩展Data接口
     extendDeep(Data, {
-        version: '0.2.0',
+        version: '0.2.1',
         has: function (key) {
             return data.has(key);
         },
