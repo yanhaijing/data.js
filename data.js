@@ -86,22 +86,20 @@
             var ctx = context[name];
             var copy = src[name];
             var copyIsArr;
+            var isadd = false;
+            var isdelete = false;
             //避免无限循环
             if (context === copy) {
                 continue;
             }
             
-            nkey = (typeof key === 'undefined' ? '' : (key + '.')) + name;
-            
-            pub(events, 'set', nkey, copy);
-            
             if (typeof copy === 'undefined') {
-                pub(events, 'delete', nkey, copy);
+                isdelete = true;
             } else if (typeof context[name] === 'undefined') {
-                pub(events, 'add', nkey, copy);
-            } else {
-                pub(events, 'update', nkey, copy);
+                isadd = true;
             }
+
+            nkey = (typeof key === 'undefined' ? '' : (key + '.')) + name;
             
             if (copy && (isObj(copy) || (copyIsArr = isArr(copy)))) {                
                 if (copyIsArr) {
@@ -114,6 +112,16 @@
                 context[name] = extendData(nkey, events, context[name], copy);
             } else {                
                 context[name] = copy;
+            }
+            
+            pub(events, 'set', nkey, context[name]);
+            
+            if (isdelete) {
+                pub(events, 'delete', nkey, context[name]);
+            } else if (isadd) {
+                pub(events, 'add', nkey, context[name]);
+            } else {
+                pub(events, 'update', nkey, context[name]);
             }
         }
         

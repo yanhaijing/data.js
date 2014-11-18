@@ -70,6 +70,13 @@ QUnit.test( "测试sub接口", function( assert ) {
     });
     D.set('b.c.d', 123);
     D.set('b.c', {d: 123});
+
+    D.set('test', {a: 1});
+    D.sub('set', 'test', function (e) {
+        assert.ok( e.data.a === 1, "e.data.a === 1 Passed!" );
+        assert.ok( e.data.b === 1, "e.data.b === 1 Passed!" );
+    });
+    D.set('test', {b: 1});
 });
 
 module('Module unsub');
