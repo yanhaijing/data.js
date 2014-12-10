@@ -113,6 +113,10 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 
 - [report question](https://github.com/yanhaijing/data.js/issues "report question")
 
+##CHANGELOG
+
+[CHANGELOG.md](CHANGELOG.md)
+
 ##Copyright
 
 Copyright © 2013 yanhaijing. All Rights Reserved
