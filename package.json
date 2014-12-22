@@ -1,5 +1,5 @@
 {
-  "name": "data_js",
+  "name": "data.js",
   "description": "data.js 是带有消息通知的数据中心，我称其为会说话的数据。旨在让编程变得简单，世界变得美好。",
   "version": "0.2.1",
   "homepage": "https://github.com/yanhaijing/data.js",
@@ -38,5 +38,13 @@
     "data.js",
     "Data"
   ],
-  "main": "data.js"
+  "main": "data.js",
+  "spm": {
+    "main": "data.js",
+    "ignore": [
+      "demo",
+      "doc",
+      "test"
+    ]
+  }
 }
