@@ -38,5 +38,13 @@
     "data.js",
     "Data"
   ],
-  "main": "data.js"
+  "main": "data.js",
+  "spm": {
+    "main": "data.js",
+    "ignore": [
+      "demo",
+      "doc",
+      "test"
+    ]
+  }
 }
