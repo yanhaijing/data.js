@@ -1,4 +1,5 @@
-#[data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.2.1-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.2.1)
+#[data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.2.1-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.2.1) [![spm package](http://spmjs.io/badge/data.js)](http://spmjs.io/package/data.js)
+
 data.js 是带有消息通知的数据中心，我称其为会说话的数据。旨在让编程变得简单，世界变得美好。
 
 ##用途
@@ -38,14 +39,24 @@ require(['data'], function (Data) {
 
 ###bower
 
-	$ bower install data.js
-
-###node.js
-
+```bash
+$ bower install data.js
 ```
-$ npm install data_js//从npm安装
 
-*.js
+###spm
+
+```bash
+$ spm install data.js
+```
+
+###npm
+
+```bash
+$ npm install data_js
+```
+
+```js
+// *.js
 var Data = require('data');
 Data.set('a', 123);
 ```
