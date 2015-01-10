@@ -1,5 +1,5 @@
 /*!
- * data.js v0.2.0 (https://github.com/yanhaijing/data.js)
+ * data.js v0.2.1 (https://github.com/yanhaijing/data.js)
  * Copyright 2013 yanhaijing. All Rights Reserved
  * Licensed under MIT (https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt)
  */
