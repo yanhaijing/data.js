@@ -2,12 +2,12 @@
 
 data.js 是带有消息通知的数据中心，我称其为会说话的数据。旨在让编程变得简单，世界变得美好。
 
-##Use
+##特性
 
 1. 全局数据中心，可以用来存放数据，在不同程序中共享。
 2. 将程序的耦合度，变为数据耦合，采用隐式调用风格，发挥js事件风格。
 
-##Compatibility
+##兼容性
 
 - Node 0.10+
 - Safari 6+ (Mac)
@@ -17,31 +17,23 @@ data.js 是带有消息通知的数据中心，我称其为会说话的数据。
 - Internet Explorer 6+ (Windows, Windows Phone)
 - Opera 10+ (Windows, linux, Android)
 
-##How To Use?
+##如何使用？
 
-###Tradition
+###传统用法
 
-```html	
-//在程序的最开始处添加如下js
-<script src="data.js"></script>
-<script>
-	Data.set('a', 123);
-</script>
-```
+	//在程序的最开始处添加如下js
+	<script src="data.js"></script>
 
 ###AMD
 
-```javascript
-require(['data'], function (Data) {
-	Data.set('a', 123);
-});
-```
+	require(['data'], function (Data) {
+		***
+	});
 
 ###Bower
 
-```bash
-$ bower install data.js
-```
+    $ bower install data.js
+    $ bower install git://github.com/yanhaijing/data.js.git
 
 ###spm
 
@@ -51,19 +43,10 @@ $ spm install data.js
 
 ###npm
 
-```bash
-$ npm install data_js
-```
+	$ npm install data_js
+	$ npm install yanhaijing/data.js
 
-```js
-// *.js
-var Data = require('data');
-Data.set('a', 123);
-```
-
-即可使用data.js,在传统浏览器环境data.js占用全局命名空间 `Data`。
-
-##Quick Start
+##快速上手
 
 Data常用接口只有三个，非常简单：
 
@@ -75,24 +58,24 @@ Data.set('a', 1);//存入数据
 Data.get('a');//读取数据
 ```
 
-更多例子，请见目录下的demo目录。
+更多例子，请见目录下的[demo](demo)目录。
 
-##Document
+##文档
 
 [API](doc/api.md)
 
-##Test
+##质量保证
 
 data.js的代码运行于ecmascript严格模式下，jshint验证，完整的单元测试，并使用travis保证。测试代码见test目录下。
 
-##Performance Reference
+##性能
 
 data.js的存入和取出，都是对数据的一次深拷贝，同时还要解析数据的键和派发消息，所以性能会有很大损失，但不涉及大批量循环存取不会遇到性能问题。
 
 - [get接口性能](http://jsperf.com/yanhaijing-data-js-get)
 - [set接口性能](http://jsperf.com/yanhaijing-data-js-set)
 
-##Contribution Guides
+##贡献指南
 
 如果你想为data.js贡献代码，请采用fork + pull request 方式，并在发起pr前先将master上超前的代码rebase到自己的分支上。
 
@@ -101,7 +84,7 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 	$ npm install #安装grunt及其依赖
 	$ grunt
 
-##Authors
+##作者
 
 **yanhaijing**
 
@@ -109,22 +92,13 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 - [Email](mailto:yanhaijing@yeah.net "yanhaijing's Email")
 - [Blog](http://yanhaijing.com "yanhaijing's Blog")
 
-##Issues
+##报告问题
 
-- [report question](https://github.com/yanhaijing/data.js/issues "report question")
+- [Issues](https://github.com/yanhaijing/data.js/issues "报告问题")
 
-##CHANGELOG
+##更新日志
 
-[CHANGELOG.md](CHANGELOG.md)
-
-##Copyright
-
-Copyright © 2013 yanhaijing. All Rights Reserved
-
-Licensed under the MIT-LICENSE;
-you may not use this work except in compliance with the License.
-You may obtain a copy of the License in the LICENSE file, or at:
-	[http://opensource.org/licenses/MIT](http://opensource.org/licenses/MIT)
+[更新日志](CHANGELOG.md)
 
 
 

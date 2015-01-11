@@ -17,7 +17,7 @@ data.js在浏览器环境中默认占用全局变量Data，在模块化编程环
 
 ##noConflict
 
-此函数尽在以原始方式在浏览器中引入是存在，用来释放Data占用的全局变量Data。同时返回Data。
+此函数会在以原始方式在浏览器中引入是存在，用来释放Data占用的全局变量Data。同时返回Data。
 
 - return {Function} Data
 
