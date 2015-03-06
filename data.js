@@ -33,15 +33,36 @@
     var toString = obj.toString;
     var hasOwn = obj.hasOwnProperty;
     var euid = 0;
-    function isFun(fn) {
-        return toString.call(fn) === "[object Function]";
+    function getType(x) {
+        if(x === null){
+            return 'null';
+        }
+
+        var t= typeof x;
+
+        if(t !== 'object'){
+            return t;
+        }
+
+        var c = toString.call(x).slice(8, -1).toLowerCase();
+        if(c !== 'object'){
+            return c;
+        }
+
+        if(x.constructor===Object){
+            return c;
+        }
+
+        return 'unkonw';
+    }
+    function isFn(fn) {
+        return getType(fn) === 'function';
     }
     function isArr(arr) {
-        return isFun(Array.isArray) ? 
-            Array.isArray(arr) : toString.call(arr) === '[object Array]';
+        return Array.isArray ? Array.isArray(arr) : getType(arr) === 'array';
     }
     function isObj(obj) {
-        return toString.call(obj) === "[object Object]";
+        return getType(obj) === 'object';
     }
     function extendDeep() {
         var target = arguments[0] || {};
@@ -254,7 +275,7 @@
         },
         sub: function (type, key, callback) {
             //参数不合法
-            if (typeof type !== 'string' || typeof key !== 'string' || !isFun(callback)) {
+            if (typeof type !== 'string' || typeof key !== 'string' || !isFn(callback)) {
                 return -1;
             }
 
