@@ -360,7 +360,7 @@
     //新建默认数据中心
     var data = new Data();
 
-    var Immutable = root.Immutable;
+    var Immutable;
 
     //扩展Data接口
     extendDeep(Data, {
@@ -380,7 +380,8 @@
         unsub: function (type, key, id) {
             return data.unsub(type, key, id);
         },
-        tryUseImmutable: function() {
+        tryUseImmutable: function(immutableLib) {
+            Immutable = immutableLib || root.Immutable;
             if (Immutable && Immutable.fromJS) {
                 extendDeep(Data.prototype, ImmutableDataMethods);
                 data.clear();
