@@ -150,7 +150,7 @@
     }
 
     function triggerEventsForImmutable(keyPrefix, events, beforeContext, afterContext, src) {
-        if (!isArr(src) && !isObj) {
+        if (!isArr(src) && !isObj(src)) {
             pub(events, 'set', keyPrefix, src);
             if (typeof src === 'undefined') pub(events, 'delete', keyPrefix, src);
             else if (typeof beforeContext === 'undefined') pub(events, 'add', keyPrefix, src);
