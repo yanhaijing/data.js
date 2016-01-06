@@ -19,12 +19,19 @@
     </head>
 
     <body>
+        <!-- immutable.js is optional -->
+        <script src="../lib/immutable.min.js"></script>
+        <!-- end -->
         <script src="../data.js"></script>
         <script type="text/javascript" charset="utf-8">
             Data.set('a.b.c', 123);
-        </script>
-        <script>            
             console.log(Data.get('a.b.c'));
+            // immutable.js is required for codes below.
+            Data.tryUseImmutable();
+            Data.set('a.b.c', 123);
+            console.log(Data.get('a.b.c'));
+            // You will get Immutable Object from `Data`
+            console.log(Data.get('a').toJS());
         </script>
     </body>
 </html>
