@@ -1,3 +1,7 @@
 .project
 
+#npm
 node_modules
+
+#PhpStorm / WebStorm
+.idea
