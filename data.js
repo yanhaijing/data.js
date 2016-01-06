@@ -58,7 +58,7 @@
             return c;
         }
 
-        return 'unknow';
+        return 'unknown';
     }
     function isFn(fn) {
         return getType(fn) === 'function';
