@@ -8,47 +8,6 @@ var chai = require('chai')
   , Data = require('../data.js')
   , D = Data;
 
-/***
- * 测试用例 tests
- * 注意：
- * - 在测试`sub`接口时，会监听`get`属性所定义的key
- * - `events`指的是这一个测试用例中，会被触发的事件名序列
- */
-
-var tests = [
-  {
-    'set': { 'a.b.c': 1 },
-    'get': { 'a.b': { c: 1 } },
-    'events': [ 'add', 'set' ]
-  },
-  {
-    'set': { 'a.b.c': [1, 2, 3] },
-    'get': {
-      'a.b.c.1': 2,
-      'a': { b:{c:[1,2,3]} }
-    },
-    'events': [ 'add', 'add', 'set', 'set' ]
-  },
-  {
-    'set': { 'a': { b:{c:[1,2,3]} } },
-    'get': { 'a.b.c.2': 3 },
-    'events': [ 'add', 'set' ]
-  },
-  {
-    'set': { 'a.b.c.d.e.f': 1 },
-    'get': { 'a.b.c.d.e': { f: 1 } },
-    'events': [ 'add', 'set' ]
-  },
-  {
-    'set': { 'a': [ {b:1} ] },
-    'get': {
-      'a.0.b': 1,
-      'a': [ {b:1} ]
-    },
-    'events': [ 'add', 'add', 'set', 'set' ]
-  }
-];
-
 function testcase(test) {
   return 'testcase: ' + JSON.stringify(test);
 }
@@ -56,6 +15,7 @@ function testcase(test) {
 describe('Data.js', function() {
   // set timeout for asynchronous code
   this.timeout(100);
+  var x;
 
   describe('get & set', function() {
 
@@ -75,6 +35,35 @@ describe('Data.js', function() {
       expect(D.get('')).to.equal(undefined);
       expect(D.get('a-b-c-d')).to.equal(undefined);
     });
+
+    var tests = [
+      {
+        'set': { 'a.b.c': 1 },
+        'get': { 'a.b': { c: 1 } }
+      },
+      {
+        'set': { 'a.b.c': [1, 2, 3] },
+        'get': {
+          'a.b.c.1': 2,
+          'a': { b:{c:[1,2,3]} }
+        }
+      },
+      {
+        'set': { 'a': { b:{c:[1,2,3]} } },
+        'get': { 'a.b.c.2': 3 }
+      },
+      {
+        'set': { 'a.b.c.d.e.f': 1 },
+        'get': { 'a.b.c.d.e': { f: 1 } }
+      },
+      {
+        'set': { 'a': [ {b:1} ] },
+        'get': {
+          'a.0.b': 1,
+          'a': [ {b:1} ]
+        }
+      }
+    ];
 
     tests.forEach(function(test, index) {
       it('complex get & set - ' + index, function() {
@@ -104,7 +93,7 @@ describe('Data.js', function() {
 
   describe('sub', function() {
 
-    it('simple sub', function(done) {
+    it('several steps', function(done) {
       var target
         , events = ['add', 'delete', 'set', 'set', 'set', 'update']
         , eventStack = []
@@ -133,30 +122,53 @@ describe('Data.js', function() {
       D.set('a', undefined);
     });
 
+    /***
+     * 测试用例 tests
+     * 注意：`events`指的是这一个测试用例中，会被触发的事件名序列
+     */
+    var tests = [
+      {
+        'set': { 'a.b.c': [1, 2, 3] },
+        'sub': {
+          'a.b.c.1': 2,
+          'a.b.c.2': 3
+        },
+        'events': [ 'add', 'add', 'set', 'set' ]
+      },
+      {
+        'set': { 'a': { b:{c:[1,2,3]} } },
+        'sub': {
+          'a': { b:{c:[1,2,3]} },
+          'a.b': {c:[1,2,3]},
+          'a.b.c': [1,2,3],
+          'a.b.c.2': 3
+        },
+        'events': [ 'add', 'add', 'add', 'add', 'set', 'set', 'set', 'set' ]
+      }
+    ];
+
     tests.forEach(function(test, index) {
       it('complex sub - ' + index, function(done) {
         D.clear();
 
         var events = test.events
           , eventStack = []
-          , tryDone = function() {
-            if (eventStack.length >= events.length) {
+          , tryDone = function(force) {
+            if (force || eventStack.length >= events.length) {
               eventStack.sort(function(a, b) { return a > b; });
               events.sort(function(a, b) { return a > b; });
               expect(eventStack, testcase(test)).to.deep.equal(events);
-              done();
+              // wait to check if number of triggered events is more than expectation
+              setTimeout(function() { done(); }, 5);
             }
           };
 
-        console.log(JSON.stringify(test));
-
-        for (key in test.get) {
-          if (test.get.hasOwnProperty(key)) {
+        for (key in test.sub) {
+          if (test.sub.hasOwnProperty(key)) {
             (function(key) {
               ['set', 'update', 'delete', 'add'].forEach(function(eventName) {
                 D.sub(eventName, key, function (e) {
-                  console.log(JSON.stringify(e));
-                  expect(e).to.deep.equal({ type: eventName, key: key, data: test.get[key] });
+                  expect(e).to.deep.equal({ type: eventName, key: key, data: test.sub[key] });
                   eventStack.push(eventName);
                   tryDone();
                 });
@@ -170,6 +182,9 @@ describe('Data.js', function() {
             D.set(key, test.set[key]);
           }
         }
+
+        // done by force if number of triggered events is less than expectation
+        setTimeout(function() { tryDone(true); }, 80);
       });
     });
   });
