@@ -3,13 +3,14 @@
  * @email: jerry.zry@outlook.com
  */
 
-var chai = require('chai')
-  , expect = chai.expect
+var expect = require('expect.js')
   , Data = require('../data.js')
   , D = Data;
 
-function testcase(test) {
-  return 'testcase: ' + JSON.stringify(test);
+function forEach(arr, callback) {
+  for (var i = 0; i < arr.length; i++) {
+    callback(arr[i], i, arr);
+  }
 }
 
 describe('Data.js', function() {
@@ -33,6 +34,7 @@ describe('Data.js', function() {
       expect(D.get('a.b.c.d.e.f')).to.equal(undefined);
       expect(D.get('')).to.equal(undefined);
       expect(D.get('a-b-c-d')).to.equal(undefined);
+      D.clear();
     });
 
     var tests = [
@@ -64,7 +66,7 @@ describe('Data.js', function() {
       }
     ];
 
-    tests.forEach(function(test, index) {
+    forEach(tests, function(test, index) {
       it('complex get & set - ' + index, function() {
         for (var key in test.set) {
           if (test.set.hasOwnProperty(key)) {
@@ -73,7 +75,7 @@ describe('Data.js', function() {
         }
         for (key in test.get) {
           if (test.get.hasOwnProperty(key)) {
-            expect(D.get(key), testcase(test)).to.deep.equal(test.get[key]);
+            expect(D.get(key)).to.eql(test.get[key]);
           }
         }
         D.clear();
@@ -83,6 +85,7 @@ describe('Data.js', function() {
 
   describe('has', function() {
     it('simple has', function() {
+      D.clear();
       expect(D.has('a')).to.equal(false);
       D.set('a', 1);
       expect(D.has('a')).to.equal(true);
@@ -99,17 +102,15 @@ describe('Data.js', function() {
         , tryDone = function() {
           if (eventStack.length >= events.length) {
             eventStack.sort();
-            console.log(events);
-            console.log(eventStack);
-            expect(eventStack).to.deep.equal(events);
+            expect(eventStack).to.eql(events);
             D.clear();
             done();
           }
         };
 
-      ['set', 'add', 'delete', 'update'].forEach(function(eventName) {
+      forEach(['set', 'add', 'delete', 'update'], function(eventName) {
         D.sub(eventName, 'a', function (e) {
-          expect(e).to.deep.equal({ type: eventName, key: 'a', data: target });
+          expect(e).to.eql({ type: eventName, key: 'a', data: target });
           eventStack.push(eventName);
           tryDone();
         });
@@ -148,7 +149,7 @@ describe('Data.js', function() {
       }
     ];
 
-    tests.forEach(function(test, index) {
+    forEach(tests, function(test, index) {
       it('complex sub - ' + index, function(done) {
         D.clear();
 
@@ -158,7 +159,7 @@ describe('Data.js', function() {
             if (force || eventStack.length >= events.length) {
               eventStack.sort();
               events.sort();
-              expect(eventStack, testcase(test)).to.deep.equal(events);
+              expect(eventStack).to.eql(events);
               // wait to check if number of triggered events is more than expectation
               setTimeout(function() { done(); }, 5);
             }
@@ -167,9 +168,9 @@ describe('Data.js', function() {
         for (key in test.sub) {
           if (test.sub.hasOwnProperty(key)) {
             (function(key) {
-              ['set', 'update', 'delete', 'add'].forEach(function(eventName) {
+              forEach(['set', 'update', 'delete', 'add'], function(eventName) {
                 D.sub(eventName, key, function (e) {
-                  expect(e).to.deep.equal({ type: eventName, key: key, data: test.sub[key] });
+                  expect(e).to.eql({ type: eventName, key: key, data: test.sub[key] });
                   eventStack.push(eventName);
                   tryDone();
                 });
