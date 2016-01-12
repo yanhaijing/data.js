@@ -98,7 +98,9 @@ describe('Data.js', function() {
         , eventStack = []
         , tryDone = function() {
           if (eventStack.length >= events.length) {
-            eventStack.sort(function(a, b) { return a > b; });
+            eventStack.sort();
+            console.log(events);
+            console.log(eventStack);
             expect(eventStack).to.deep.equal(events);
             D.clear();
             done();
@@ -154,8 +156,8 @@ describe('Data.js', function() {
           , eventStack = []
           , tryDone = function(force) {
             if (force || eventStack.length >= events.length) {
-              eventStack.sort(function(a, b) { return a > b; });
-              events.sort(function(a, b) { return a > b; });
+              eventStack.sort();
+              events.sort();
               expect(eventStack, testcase(test)).to.deep.equal(events);
               // wait to check if number of triggered events is more than expectation
               setTimeout(function() { done(); }, 5);
