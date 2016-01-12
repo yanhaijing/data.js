@@ -8,15 +8,13 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <script src="../../lib/es5-shim.js"></script>
-    <script src="../../lib/es5-sham.js"></script>
     <script src="mocha.js"></script>
-    <script src="chai.js"></script>
+    <script src="expect.js"></script>
     <script>mocha.setup('bdd');</script>
     <script src="../../data.js"></script>
     <script>
       var libs = {
-        'chai': chai,
+        'expect.js': expect,
         '../data.js': Data
       };
       var require = function(path) {
