@@ -317,6 +317,9 @@
             delete events[key][id];
             
             return true;
+        },
+        clear: function () {
+            return this._init();
         }
     });
     
@@ -340,6 +343,9 @@
         },
         unsub: function (type, key, id) {
             return data.unsub(type, key, id);
+        },
+        clear: function () {
+            return data.clear();
         }
     });
     
