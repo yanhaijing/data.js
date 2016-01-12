@@ -66,6 +66,16 @@ describe('Data.js', function() {
       D.clear();
     });
 
+    it('some edge cases', function() {
+      D.set('1.+-*/!@#$%^&()', 1);
+      expect(D.get('1.+-*/!@#$%^&()')).to.equal(1);
+      D.set('a');
+      expect(D.get('a')).to.equal(undefined);
+      expect(D.get('a.b.c.d.e.f')).to.equal(undefined);
+      expect(D.get('')).to.equal(undefined);
+      expect(D.get('a-b-c-d')).to.equal(undefined);
+    });
+
     tests.forEach(function(test, index) {
       it('complex get & set - ' + index, function() {
         for (var key in test.set) {
