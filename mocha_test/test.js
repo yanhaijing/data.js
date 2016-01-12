@@ -14,8 +14,7 @@ function testcase(test) {
 
 describe('Data.js', function() {
   // set timeout for asynchronous code
-  this.timeout(100);
-  var x;
+  this.timeout(1000);
 
   describe('get & set', function() {
 
