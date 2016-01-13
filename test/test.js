@@ -37,6 +37,25 @@ describe('Data.js', function() {
       D.clear();
     });
 
+    it('对原型链上可枚举属性的测试', function() {
+      function A() {
+        this.a = 1;
+      }
+
+      A.prototype = {
+        b: 2
+      };
+
+      var a = new A();
+      D.set('a', a);
+      expect(D.get('a')).to.eql({a: 1});
+      
+      D.set('a.b', a);
+      expect(D.get('a')).to.eql({a: 1, b: {a: 1}});
+      expect(D.get('a.b')).to.eql({a: 1});
+      D.clear();
+    });
+
     var tests = [
       {
         'set': { 'a.b.c': 1 },

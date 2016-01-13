@@ -86,6 +86,11 @@
                 if (target === copy) {
                     continue;
                 }
+
+                // 非可枚举属性
+                if (!hasOwn.call(arr, name)) {
+                    continue;
+                }
                 
                 if (copy && (isObj(copy) || (copyIsArr = isArr(copy)))) {
                     if (copyIsArr) {
@@ -119,6 +124,11 @@
                 continue;
             }
             
+            // 非可枚举属性
+            if (!hasOwn.call(src, name)) {
+                continue;
+            }
+                
             if (typeof copy === 'undefined') {
                 isdelete = true;
             } else if (typeof context[name] === 'undefined') {
