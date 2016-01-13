@@ -43,8 +43,13 @@
         if(t !== 'object'){
             return t;
         }
-
-        var c = toString.call(x).slice(8, -1).toLowerCase();
+        var c;
+        // 某些类型会报错
+        try {
+            c = toString.call(x).slice(8, -1).toLowerCase();
+        } catch(exp) {
+            return 'unknow';
+        }
         if(c !== 'object'){
             return c;
         }
@@ -53,7 +58,7 @@
             return c;
         }
 
-        return 'unkonw';
+        return 'unknow';
     }
     function isFn(fn) {
         return getType(fn) === 'function';
