@@ -333,7 +333,7 @@
             
             return true;
         },
-        clear: function () {
+        _clear: function () {
             return this._init();
         }
     });
@@ -359,8 +359,8 @@
         unsub: function (type, key, id) {
             return data.unsub(type, key, id);
         },
-        clear: function () {
-            return data.clear();
+        _clear: function () {
+            return data._clear();
         }
     });
     

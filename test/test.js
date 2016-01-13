@@ -23,7 +23,7 @@ describe('Data.js', function() {
       expect(D.get('a')).to.equal(undefined);
       D.set('a', 1);
       expect(D.get('a')).to.equal(1);
-      D.clear();
+      D._clear();
     });
 
     it('some edge cases', function() {
@@ -34,7 +34,7 @@ describe('Data.js', function() {
       expect(D.get('a.b.c.d.e.f')).to.equal(undefined);
       expect(D.get('')).to.equal(undefined);
       expect(D.get('a-b-c-d')).to.equal(undefined);
-      D.clear();
+      D._clear();
     });
 
     it('对原型链上可枚举属性的测试', function() {
@@ -53,7 +53,7 @@ describe('Data.js', function() {
       D.set('a.b', a);
       expect(D.get('a')).to.eql({a: 1, b: {a: 1}});
       expect(D.get('a.b')).to.eql({a: 1});
-      D.clear();
+      D._clear();
     });
 
     var tests = [
@@ -97,18 +97,18 @@ describe('Data.js', function() {
             expect(D.get(key)).to.eql(test.get[key]);
           }
         }
-        D.clear();
+        D._clear();
       });
     });
   });
 
   describe('has', function() {
     it('simple has', function() {
-      D.clear();
+      D._clear();
       expect(D.has('a')).to.equal(false);
       D.set('a', 1);
       expect(D.has('a')).to.equal(true);
-      D.clear();
+      D._clear();
     });
   });
 
@@ -122,7 +122,7 @@ describe('Data.js', function() {
           if (eventStack.length >= events.length) {
             eventStack.sort();
             expect(eventStack).to.eql(events);
-            D.clear();
+            D._clear();
             done();
           }
         };
@@ -170,7 +170,7 @@ describe('Data.js', function() {
 
     forEach(tests, function(test, index) {
       it('complex sub - ' + index, function(done) {
-        D.clear();
+        D._clear();
 
         var events = test.events
           , eventStack = []
@@ -219,7 +219,7 @@ describe('Data.js', function() {
       D.unsub('set', 'm', eid);
       D.set('m', 3);
       D.set('m', 4);
-      D.clear();
+      D._clear();
       expect(triggerTimes).to.equal(2);
     });
   });
