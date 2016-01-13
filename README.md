@@ -81,16 +81,14 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 
 在目录运行如下命令，完成验证测试编译过程，确保无误：
 
-	$ npm install #安装grunt及其依赖
-	$ grunt
+	$ npm install -g mocha # 安装mocha
+	$ npm install # 安装依赖
+	$ mocha mocha_test # 运行测试代码
 
-##作者
+##贡献者
 
-**yanhaijing**
-
-- [Weibo](http://weibo.com/yanhaijing1234 "yanhaijing's Weibo")
-- [Email](mailto:yanhaijing@yeah.net "yanhaijing's Email")
-- [Blog](http://yanhaijing.com "yanhaijing's Blog")
+- [yanhaijing](http://yanhaijing.com "yanhaijing's Blog")
+- [Jerry Zou](https://github.com/zry656565)
 
 ##报告问题
 
