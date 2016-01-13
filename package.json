@@ -25,7 +25,7 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "mocha_test": "mocha mocha_test"
+    "test": "mocha mocha_test"
   },
   "devDependencies": {
     "expect.js": "~0.3.1"
