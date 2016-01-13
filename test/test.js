@@ -1,103 +1,220 @@
-var D = Data;
+/**
+ * @author: Jerry Zou
+ * @email: jerry.zry@outlook.com
+ */
 
-module('Module has');
-QUnit.test( "测试has接口", function( assert ) {
-    assert.ok(D.has('a') === false, "D.has('a') === false Passed!");
-    D.set('a', 123);
-    assert.ok(D.has('a') === true, "D.has('a') === true Passed!");
-});
+var expect = require('expect.js')
+  , Data = require('../data.js')
+  , D = Data;
 
-module('Module Set');
-QUnit.test( "测试set接口", function( assert ) {
-    D.set('a', 1);
-    assert.ok( D.get('a') === 1, "Passed!" );
-    
-    D.set('a', 2);
-    assert.ok( D.get('a') === 2, "Passed!" );
-    
-    D.set('a.b', 1);
-    assert.ok( D.get('a.b') === 1, "Passed!" );
-    assert.ok( typeof D.get('a') === 'object', "Passed!" );
-    
-    D.set('a.b.c.d.e.f', 1);
-    assert.ok( D.get('a.b.c.d.e.f') === 1, "Passed!" );
-    
-    D.set('a', {b:1});
-    assert.ok( D.get('a.b') === 1, "Passed!" );
-    
-    D.set('a', {b:{c: [1]}});
-    assert.ok( D.get('a.b.c.0') === 1, "Passed!" );
-    
-    D.set('a');
-    assert.ok( D.get('a') === undefined, "Passed!" );
-    
-    D.set('1.+-*/!@#$%^&()', 1);
-    assert.ok( D.get('1.+-*/!@#$%^&()') === 1, "Passed!" );
-});
+function forEach(arr, callback) {
+  for (var i = 0; i < arr.length; i++) {
+    callback(arr[i], i, arr);
+  }
+}
 
-module('Module get');
-QUnit.test( "测试get接口", function( assert ) {
-    D.set('a');
-    assert.ok( D.get('a') === undefined, "Passed!" );
-    assert.ok( D.get('a.b.c.d.e.f') === undefined, "Passed!" );
-    assert.ok( D.get('') === undefined, "Passed!" );
-    assert.ok( D.get('a-b-c-d') === undefined, "Passed!" );
-});
+describe('Data.js', function() {
+  // set timeout for asynchronous code
+  this.timeout(1000);
 
-module('Module sub');
-QUnit.test( "测试sub接口", function( assert ) {
-    D.set('a');
-    D.sub('set', 'a', function (e) {
-        assert.ok( e.type === 'set', "e.type === 'set' Passed!" );
-        assert.ok( e.key === 'a', "e.key === 'a' Passed!" );
-        assert.ok( e.data === 1, "e.data === 1 Passed!" );
+  describe('get & set', function() {
+
+    it('simple get & set', function() {
+      expect(D.get('a')).to.equal(undefined);
+      D.set('a', 1);
+      expect(D.get('a')).to.equal(1);
+      D.clear();
     });
-    D.sub('add', 'a', function (e) {
-        assert.ok( e.type === 'add', "e.type === 'add' Passed!" );
-        assert.ok( e.key === 'a', "e.key === 'a' Passed!" );
-        assert.ok( e.data === 1, "e.data === 1 Passed!" );
-    });
-    D.sub('update', 'a', function (e) {
-        assert.ok( e.type === 'update', "e.type === 'update' Passed!" );
-        assert.ok( e.key === 'a', "e.key === 'a' Passed!" );
-        assert.ok( e.data === 1, "e.data === 1 Passed!" );
-    });
-    D.set('a', 1);
-    D.set('a', 1);
-    
-    D.sub('set', 'b.c.d', function (e) {
-        assert.ok( e.data === 123, "e.data === 123 Passed!" );
-    });
-    D.set('b.c.d', 123);
-    D.set('b.c', {d: 123});
 
-    D.set('test', {a: 1});
-    D.sub('set', 'test', function (e) {
-        assert.ok( e.data.a === 1, "e.data.a === 1 Passed!" );
-        assert.ok( e.data.b === 1, "e.data.b === 1 Passed!" );
+    it('some edge cases', function() {
+      D.set('1.+-*/!@#$%^&()', 1);
+      expect(D.get('1.+-*/!@#$%^&()')).to.equal(1);
+      D.set('a');
+      expect(D.get('a')).to.equal(undefined);
+      expect(D.get('a.b.c.d.e.f')).to.equal(undefined);
+      expect(D.get('')).to.equal(undefined);
+      expect(D.get('a-b-c-d')).to.equal(undefined);
+      D.clear();
     });
-    D.set('test', {b: 1});
-});
 
-module('Module unsub');
-QUnit.test( "测试unsub接口", function( assert ) {
-    var eid = D.sub('set', 'm', function (e) {
-        assert.ok( e.type === 'set', "e.type === 'set' Passed!" );
+    var tests = [
+      {
+        'set': { 'a.b.c': 1 },
+        'get': { 'a.b': { c: 1 } }
+      },
+      {
+        'set': { 'a.b.c': [1, 2, 3] },
+        'get': {
+          'a.b.c.1': 2,
+          'a': { b:{c:[1,2,3]} }
+        }
+      },
+      {
+        'set': { 'a': { b:{c:[1,2,3]} } },
+        'get': { 'a.b.c.2': 3 }
+      },
+      {
+        'set': { 'a.b.c.d.e.f': 1 },
+        'get': { 'a.b.c.d.e': { f: 1 } }
+      },
+      {
+        'set': { 'a': [ {b:1} ] },
+        'get': {
+          'a.0.b': 1,
+          'a': [ {b:1} ]
+        }
+      }
+    ];
+
+    forEach(tests, function(test, index) {
+      it('complex get & set - ' + index, function() {
+        for (var key in test.set) {
+          if (test.set.hasOwnProperty(key)) {
+            D.set(key, test.set[key]);
+          }
+        }
+        for (key in test.get) {
+          if (test.get.hasOwnProperty(key)) {
+            expect(D.get(key)).to.eql(test.get[key]);
+          }
+        }
+        D.clear();
+      });
     });
-    D.set('m', 1);
-    D.unsub('set', 'm', eid);
-    D.set('m', 2);
-    assert.ok( typeof eid === 'number', "typeof eid === 'number' Passed!" );
-});
+  });
 
-module('Module new Data');
-QUnit.test( "测试new Data", function( assert ) {
-    var A = new Data();
-    var B = new Data();
-    
-    A.set('a', 123);
-    B.set('a', 456);
-    
-    assert.ok(A.get('a') === 123, "A.get('a') === 123 Passed!");
-    assert.ok(B.get('a') === 456, "B.get('a') === 456 Passed!");
+  describe('has', function() {
+    it('simple has', function() {
+      D.clear();
+      expect(D.has('a')).to.equal(false);
+      D.set('a', 1);
+      expect(D.has('a')).to.equal(true);
+      D.clear();
+    });
+  });
+
+  describe('sub', function() {
+
+    it('several steps', function(done) {
+      var target
+        , events = ['add', 'delete', 'set', 'set', 'set', 'update']
+        , eventStack = []
+        , tryDone = function() {
+          if (eventStack.length >= events.length) {
+            eventStack.sort();
+            expect(eventStack).to.eql(events);
+            D.clear();
+            done();
+          }
+        };
+
+      forEach(['set', 'add', 'delete', 'update'], function(eventName) {
+        D.sub(eventName, 'a', function (e) {
+          expect(e).to.eql({ type: eventName, key: 'a', data: target });
+          eventStack.push(eventName);
+          tryDone();
+        });
+      });
+
+      target = 1;
+      D.set('a', 1);
+      target = 2;
+      D.set('a', 2);
+      target = undefined;
+      D.set('a', undefined);
+    });
+
+    /***
+     * 测试用例 tests
+     * 注意：`events`指的是这一个测试用例中，会被触发的事件名序列
+     */
+    var tests = [
+      {
+        'set': { 'a.b.c': [1, 2, 3] },
+        'sub': {
+          'a.b.c.1': 2,
+          'a.b.c.2': 3
+        },
+        'events': [ 'add', 'add', 'set', 'set' ]
+      },
+      {
+        'set': { 'a': { b:{c:[1,2,3]} } },
+        'sub': {
+          'a': { b:{c:[1,2,3]} },
+          'a.b': {c:[1,2,3]},
+          'a.b.c': [1,2,3],
+          'a.b.c.2': 3
+        },
+        'events': [ 'add', 'add', 'add', 'add', 'set', 'set', 'set', 'set' ]
+      }
+    ];
+
+    forEach(tests, function(test, index) {
+      it('complex sub - ' + index, function(done) {
+        D.clear();
+
+        var events = test.events
+          , eventStack = []
+          , tryDone = function(force) {
+            if (force || eventStack.length >= events.length) {
+              eventStack.sort();
+              events.sort();
+              expect(eventStack).to.eql(events);
+              // wait to check if number of triggered events is more than expectation
+              setTimeout(function() { done(); }, 5);
+            }
+          };
+
+        for (key in test.sub) {
+          if (test.sub.hasOwnProperty(key)) {
+            (function(key) {
+              forEach(['set', 'update', 'delete', 'add'], function(eventName) {
+                D.sub(eventName, key, function (e) {
+                  expect(e).to.eql({ type: eventName, key: key, data: test.sub[key] });
+                  eventStack.push(eventName);
+                  tryDone();
+                });
+              });
+            }(key));
+          }
+        }
+
+        for (var key in test.set) {
+          if (test.set.hasOwnProperty(key)) {
+            D.set(key, test.set[key]);
+          }
+        }
+
+        // done by force if number of triggered events is less than expectation
+        setTimeout(function() { tryDone(true); }, 80);
+      });
+    });
+  });
+
+  describe('unsub', function() {
+    it('simple test', function(){
+      var triggerTimes = 0
+        , eid = D.sub('set', 'm', function (e) { triggerTimes++; });
+      D.set('m', 1);
+      D.set('m', 2);
+      D.unsub('set', 'm', eid);
+      D.set('m', 3);
+      D.set('m', 4);
+      D.clear();
+      expect(triggerTimes).to.equal(2);
+    });
+  });
+
+  describe('multiple Data', function() {
+    it('simple test', function() {
+      var A = new Data();
+      var B = new Data();
+
+      A.set('a', 123);
+      B.set('a', 456);
+
+      expect(A.get('a')).to.equal(123);
+      expect(B.get('a')).to.equal(456);
+    });
+  });
 });

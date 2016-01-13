@@ -81,9 +81,9 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 
 在目录运行如下命令，完成验证测试编译过程，确保无误：
 
-	$ npm install -g mocha # 安装mocha
+	$ npm install -g mocha@~2.3.4 # 安装mocha
 	$ npm install # 安装依赖
-	$ mocha mocha_test # 运行测试代码
+	$ mocha test # 运行测试代码
 
 ##贡献者
 
