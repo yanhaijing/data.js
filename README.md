@@ -1,4 +1,4 @@
-#[data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.2.1-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.2.1) [![spm package](http://spmjs.io/badge/data.js)](http://spmjs.io/package/data.js)
+#[data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.2.1-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.2.1) [![spm package](http://spmjs.io/badge/data.js)](http://spmjs.io/package/data.js)
 
 data.js 是带有消息通知的数据中心，我称其为会说话的数据。旨在让编程变得简单，世界变得美好。
 
@@ -84,6 +84,9 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 	$ npm install -g mocha@~2.3.4 # 安装mocha
 	$ npm install # 安装依赖
 	$ mocha test # 运行测试代码
+
+	$ npm install -g gulp@~3.9.0 # 安装gulp
+	# gulp lint # 验证代码风格
 
 ##贡献者
 
