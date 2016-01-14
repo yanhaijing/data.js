@@ -111,6 +111,21 @@
         return target;
     }
     
+    function pub(events, event, key, data) {
+        events = events[event][key];
+        
+        if (isObj(events)) {
+            for (var name in events) {
+                if (events.hasOwnProperty(name)) {
+                    events[name]({
+                        type: event,
+                        key: key,
+                        data: data
+                    });
+                }
+            }
+        }
+    }
     function extendData(key, events, context, src) {
         var nkey;
         for (var name in src) {
@@ -178,21 +193,6 @@
         }
         
         return src;
-    }
-    function pub(events, event, key, data) {
-        events = events[event][key];
-        
-        if (isObj(events)) {
-            for (var name in events) {
-                if (events.hasOwnProperty(name)) {
-                    events[name]({
-                        type: event,
-                        key: key,
-                        data: data
-                    });
-                }
-            }
-        }
     }
     
     //Data构造函数
