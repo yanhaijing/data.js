@@ -203,13 +203,13 @@
 
             var nKey = keyPrefix + '.' + name;
 
-            triggerEventsForImmutable(nKey, events, beforeVal, afterVal, copy);
-
             pub(events, 'set', nKey, afterVal);
 
             if (isDelete) { pub(events, 'delete', nKey, afterVal); }
             else if (isAdd) { pub(events, 'add', nKey, afterVal); }
             else { pub(events, 'update', nKey, afterVal); }
+
+            if (isArr(copy) || isObj(copy)) triggerEventsForImmutable(nKey, events, beforeVal, afterVal, copy);
         }
     }
     
@@ -418,6 +418,12 @@
         },
         _clear: function () {
             return data._clear();
+        },
+        tryUseImmutable: function(immutableLib) {
+            return data.tryUseImmutable(immutableLib);
+        },
+        usePure: function() {
+            return data.usePure();
         }
     });
 
