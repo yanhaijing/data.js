@@ -370,19 +370,21 @@
             return this._init();
         },
         tryUseImmutable: function(immutableLib) {
+            if (this.isImmutable) return true;
             Immutable = immutableLib || root.Immutable;
             if (Immutable && Immutable.fromJS) {
                 extendDeep(Data.prototype, ImmutableDataMethods);
-                this._clear();
+                this._context = Immutable.fromJS(this._context);
+                this.isImmutable = true;
                 return true;
             }
-            this.isImmutable = true;
             return false;
         },
         usePure: function() {
             if (this.isImmutable) {
                 extendDeep(Data.prototype, pureMethods);
-                this._clear();
+                this._context = this._context.toJS();
+                this.isImmutable = false;
                 return true;
             } else {
                 return false;
