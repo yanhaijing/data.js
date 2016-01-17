@@ -182,13 +182,13 @@
     function triggerEventsForImmutable(keyPrefix, events, beforeContext, afterContext, src) {
         if (!isArr(src) && !isObj(src)) {
             pub(events, 'set', keyPrefix, src);
-            if (typeof src === 'undefined') pub(events, 'delete', keyPrefix, src);
-            else if (typeof beforeContext === 'undefined') pub(events, 'add', keyPrefix, src);
-            else pub(events, 'update', keyPrefix, src);
+            if (typeof src === 'undefined') { pub(events, 'delete', keyPrefix, src); }
+            else if (typeof beforeContext === 'undefined') { pub(events, 'add', keyPrefix, src); }
+            else { pub(events, 'update', keyPrefix, src); }
             return;
         }
         for (var name in src) {
-            if (!src.hasOwnProperty(name)) continue;
+            if (!src.hasOwnProperty(name)) { continue; }
             var beforeVal = beforeContext && beforeContext.get && beforeContext.get(name),
                 afterVal = afterContext.get(name),
                 copy = src[name],
@@ -207,9 +207,9 @@
 
             pub(events, 'set', nKey, afterVal);
 
-            if (isDelete) pub(events, 'delete', nKey, afterVal);
-            else if (isAdd) pub(events, 'add', nKey, afterVal);
-            else pub(events, 'update', nKey, afterVal);
+            if (isDelete) { pub(events, 'delete', nKey, afterVal); }
+            else if (isAdd) { pub(events, 'add', nKey, afterVal); }
+            else { pub(events, 'update', nKey, afterVal); }
         }
     }
     
@@ -403,9 +403,9 @@
             if (Immutable && Immutable.fromJS) {
                 extendDeep(Data.prototype, ImmutableDataMethods);
                 data._clear();
-                return true
+                return true;
             }
-            return false
+            return false;
         }
     });
 
@@ -426,7 +426,15 @@
             return this._context.getIn(parseKey(key));
         },
         set: function (key, val) {
-            if (typeof key !== 'string') return false;
+            if (typeof key !== 'string') { return false; }
+
+            function isImmutable(keys) {
+                return !!that._context.getIn(keys).get;
+            }
+
+            function nullOrUndefined(val) {
+                return typeof val === 'undefined' || val === null;
+            }
 
             var keys = parseKey(key),
                 lastKey = parseKey(key),
@@ -438,10 +446,10 @@
             } else {
                 // find the last one with nonempty value
                 while (lastKey.length > 0 && !ctx.getIn(lastKey)) {
-                    lastKey.pop()
+                    lastKey.pop();
                 }
                 // remove the last one with nonempty value which is not immutable object
-                if (lastKey.length > 0 && !isImmutable(lastKey)) this._context = ctx.removeIn(lastKey);
+                if (lastKey.length > 0 && !isImmutable(lastKey)) { this._context = ctx.removeIn(lastKey); }
                 var originalObject = this.get(key);
                 this._context = this._context.setIn(keys, originalObject ?
                     originalObject.mergeDeep(val) : Immutable.fromJS(val));
@@ -450,14 +458,6 @@
             triggerEventsForImmutable(key, this._events, ctx.getIn(keys), this._context.getIn(keys), val);
 
             return true;
-
-            function isImmutable(keys) {
-                return !!that._context.getIn(keys).get;
-            }
-
-            function nullOrUndefined(val) {
-                return typeof val === 'undefined' || val === null;
-            }
         }
     };
     
