@@ -236,9 +236,8 @@
         }
         this._init();
     };
-    
-    //扩展Data原型
-    extendDeep(Data.prototype, {
+
+    var pureMethods = {
         _init: function () {
             this._context = {};
             this._events = {
@@ -249,29 +248,29 @@
             };
         },
         set: function (key, val) {
-            var ctx = this._context;            
-            
+            var ctx = this._context;
+
             if (typeof key !== 'string') {
                 return false;
             }
-            
+
             var keys = parseKey(key);
             var len = keys.length;
-            var i = 0; 
-            var name; 
+            var i = 0;
+            var name;
             var src;
-            //键值为 单个的情况      
+            //键值为 单个的情况
             if (len < 2) {
                 src = {};
                 src[key] = val;
                 extendData(undefined, this._events, ctx, src);
                 return true;
-            } 
-                        
+            }
+
             //切换到对应上下文
             for (; i < len - 1; i++) {
                 name = keys[i];
-                
+
                 //若不存在对应上下文自动创建
                 if (!isArr(ctx[name]) && !isObj(ctx[name])) {
                     //删除操作不存在对应值时，提前退出
@@ -279,20 +278,20 @@
                         return false;
                     }
                     //若键值为数组则新建数组，否则新建对象
-                    ctx[name] = isNaN(Number(name)) ? {} : [];               
+                    ctx[name] = isNaN(Number(name)) ? {} : [];
                 }
 
                 ctx = ctx[name];
             }
-            
+
             name = keys.pop();
 
             src = isArr(ctx) ? [] : {};
 
-            src[name] = val;                                   
-            
+            src[name] = val;
+
             ctx = extendData(keys.join('.'), this._events, ctx, src);
-            
+
             return true;
         },
         get: function (key) {
@@ -300,22 +299,22 @@
             if (typeof key !== 'string') {
                 return undefined;
             }
-            
+
             var keys = parseKey(key);
             var len = keys.length;
             var i = 0;
             var ctx = this._context;
             var name;
-            
+
             for (; i < len; i++) {
                 name = keys[i];
                 ctx = ctx[name];
-                
+
                 if (typeof ctx === 'undefined' || ctx === null) {
                     return ctx;
                 }
             }
-            
+
             //返回数据的副本
             return cloneDeep(ctx);
         },
@@ -332,17 +331,17 @@
             if (!(type in this._events)) {
                 return -2;
             }
-            
+
             var events = this._events[type];
-            
+
             events[key] = events[key] || {};
-            
+
             events[key][euid++] = callback;
-            
+
             return euid - 1;
         },
-        unsub: function (type, key, id ) {   
-            //参数不合法         
+        unsub: function (type, key, id ) {
+            //参数不合法
             if (typeof type !== 'string' || typeof key !== 'string') {
                 return false;
             }
@@ -351,26 +350,48 @@
             if (!(type in this._events)) {
                 return false;
             }
-            
+
             var events = this._events[type];
-            
+
             if (!isObj(events[key])) {
                 return false;
             }
-            
+
             if (typeof id !== 'number') {
-                delete events[key];               
+                delete events[key];
                 return true;
             }
-            
+
             delete events[key][id];
-            
+
             return true;
         },
         _clear: function () {
             return this._init();
+        },
+        tryUseImmutable: function(immutableLib) {
+            Immutable = immutableLib || root.Immutable;
+            if (Immutable && Immutable.fromJS) {
+                extendDeep(Data.prototype, ImmutableDataMethods);
+                this._clear();
+                return true;
+            }
+            this.isImmutable = true;
+            return false;
+        },
+        usePure: function() {
+            if (this.isImmutable) {
+                extendDeep(Data.prototype, pureMethods);
+                this._clear();
+                return true;
+            } else {
+                return false;
+            }
         }
-    });
+    };
+    
+    //扩展Data原型
+    extendDeep(Data.prototype, pureMethods);
     
     //新建默认数据中心
     var data = new Data();
@@ -397,15 +418,6 @@
         },
         _clear: function () {
             return data._clear();
-        },
-        tryUseImmutable: function(immutableLib) {
-            Immutable = immutableLib || root.Immutable;
-            if (Immutable && Immutable.fromJS) {
-                extendDeep(Data.prototype, ImmutableDataMethods);
-                data._clear();
-                return true;
-            }
-            return false;
         }
     });
 
