@@ -452,17 +452,16 @@
                 return !!that._context.getIn(keys).get;
             }
 
-            function nullOrUndefined(val) {
-                return typeof val === 'undefined' || val === null;
-            }
-
             var keys = parseKey(key),
                 lastKey = parseKey(key),
                 that = this,
                 ctx = this._context;
 
-            if (nullOrUndefined(val)) {
+            if (typeof val === 'undefined') {
                 this._context = ctx.removeIn(keys);
+            } else if (!isArr(val) && !isObj(val)) {
+                this._context = ctx.removeIn(keys);
+                this._context = this._context.setIn(keys, val);
             } else {
                 // find the last one with nonempty value
                 while (lastKey.length > 0 && !ctx.getIn(lastKey)) {

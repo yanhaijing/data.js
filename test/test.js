@@ -71,6 +71,13 @@ function test(isImmutable) {
         expect(parse(D.get('a.b'))).to.eql({a: 1});
       });
 
+      it('Replacing', function() {
+        D.set('a.b.c', [1,2,3]);
+        D.set('a.b', 1);
+        expect(D.get('a.b')).to.equal(1);
+        expect(D.get('a.b.c')).to.equal(undefined);
+      });
+
       var tests = [
         {
           'set': { 'a.b.c': 1 },
