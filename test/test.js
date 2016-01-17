@@ -114,7 +114,7 @@ describe('Data.js', function() {
 
   describe('sub', function() {
 
-    it('several steps', function(done) {
+    it('several steps', function() {
       var target
         , events = ['add', 'delete', 'set', 'set', 'set', 'update']
         , eventStack = []
@@ -123,7 +123,6 @@ describe('Data.js', function() {
             eventStack.sort();
             expect(eventStack).to.eql(events);
             D._clear();
-            done();
           }
         };
 
@@ -169,7 +168,7 @@ describe('Data.js', function() {
     ];
 
     forEach(tests, function(test, index) {
-      it('complex sub - ' + index, function(done) {
+      it('complex sub - ' + index, function() {
         D._clear();
 
         var events = test.events
@@ -179,8 +178,6 @@ describe('Data.js', function() {
               eventStack.sort();
               events.sort();
               expect(eventStack).to.eql(events);
-              // wait to check if number of triggered events is more than expectation
-              setTimeout(function() { done(); }, 5);
             }
           };
 
