@@ -58,7 +58,7 @@
             return c;
         }
 
-        return 'unknow';
+        return 'unknown';
     }
     function isFn(fn) {
         return getType(fn) === 'function';
@@ -178,6 +178,40 @@
         
         return context;
     }
+
+    function triggerEventsForImmutable(keyPrefix, events, beforeContext, afterContext, src) {
+        if (!isArr(src) && !isObj(src)) {
+            pub(events, 'set', keyPrefix, src);
+            if (typeof src === 'undefined') { pub(events, 'delete', keyPrefix, src); }
+            else if (typeof beforeContext === 'undefined') { pub(events, 'add', keyPrefix, src); }
+            else { pub(events, 'update', keyPrefix, src); }
+            return;
+        }
+        for (var name in src) {
+            if (!src.hasOwnProperty(name)) { continue; }
+            var beforeVal = beforeContext && beforeContext.get && beforeContext.get(name),
+                afterVal = afterContext.get(name),
+                copy = src[name],
+                isAdd = false,
+                isDelete = false;
+
+            if (typeof copy === 'undefined') {
+                isDelete = true;
+            } else if (typeof beforeVal === 'undefined') {
+                isAdd = true;
+            }
+
+            var nKey = keyPrefix + '.' + name;
+
+            pub(events, 'set', nKey, afterVal);
+
+            if (isDelete) { pub(events, 'delete', nKey, afterVal); }
+            else if (isAdd) { pub(events, 'add', nKey, afterVal); }
+            else { pub(events, 'update', nKey, afterVal); }
+
+            if (isArr(copy) || isObj(copy)) triggerEventsForImmutable(nKey, events, beforeVal, afterVal, copy);
+        }
+    }
     
     function parseKey(key) {
         return key.split('.');
@@ -202,9 +236,8 @@
         }
         this._init();
     };
-    
-    //扩展Data原型
-    extendDeep(Data.prototype, {
+
+    var pureMethods = {
         _init: function () {
             this._context = {};
             this._events = {
@@ -215,29 +248,29 @@
             };
         },
         set: function (key, val) {
-            var ctx = this._context;            
-            
+            var ctx = this._context;
+
             if (typeof key !== 'string') {
                 return false;
             }
-            
+
             var keys = parseKey(key);
             var len = keys.length;
-            var i = 0; 
-            var name; 
+            var i = 0;
+            var name;
             var src;
-            //键值为 单个的情况      
+            //键值为 单个的情况
             if (len < 2) {
                 src = {};
                 src[key] = val;
                 extendData(undefined, this._events, ctx, src);
                 return true;
-            } 
-                        
+            }
+
             //切换到对应上下文
             for (; i < len - 1; i++) {
                 name = keys[i];
-                
+
                 //若不存在对应上下文自动创建
                 if (!isArr(ctx[name]) && !isObj(ctx[name])) {
                     //删除操作不存在对应值时，提前退出
@@ -245,20 +278,20 @@
                         return false;
                     }
                     //若键值为数组则新建数组，否则新建对象
-                    ctx[name] = isNaN(Number(name)) ? {} : [];               
+                    ctx[name] = isNaN(Number(name)) ? {} : [];
                 }
 
                 ctx = ctx[name];
             }
-            
+
             name = keys.pop();
 
             src = isArr(ctx) ? [] : {};
 
-            src[name] = val;                                   
-            
+            src[name] = val;
+
             ctx = extendData(keys.join('.'), this._events, ctx, src);
-            
+
             return true;
         },
         get: function (key) {
@@ -266,22 +299,22 @@
             if (typeof key !== 'string') {
                 return undefined;
             }
-            
+
             var keys = parseKey(key);
             var len = keys.length;
             var i = 0;
             var ctx = this._context;
             var name;
-            
+
             for (; i < len; i++) {
                 name = keys[i];
                 ctx = ctx[name];
-                
+
                 if (typeof ctx === 'undefined' || ctx === null) {
                     return ctx;
                 }
             }
-            
+
             //返回数据的副本
             return cloneDeep(ctx);
         },
@@ -298,17 +331,17 @@
             if (!(type in this._events)) {
                 return -2;
             }
-            
+
             var events = this._events[type];
-            
+
             events[key] = events[key] || {};
-            
+
             events[key][euid++] = callback;
-            
+
             return euid - 1;
         },
-        unsub: function (type, key, id ) {   
-            //参数不合法         
+        unsub: function (type, key, id ) {
+            //参数不合法
             if (typeof type !== 'string' || typeof key !== 'string') {
                 return false;
             }
@@ -317,30 +350,56 @@
             if (!(type in this._events)) {
                 return false;
             }
-            
+
             var events = this._events[type];
-            
+
             if (!isObj(events[key])) {
                 return false;
             }
-            
+
             if (typeof id !== 'number') {
-                delete events[key];               
+                delete events[key];
                 return true;
             }
-            
+
             delete events[key][id];
-            
+
             return true;
         },
         _clear: function () {
             return this._init();
+        },
+        tryUseImmutable: function(immutableLib) {
+            if (this.isImmutable) return true;
+            Immutable = immutableLib || root.Immutable;
+            if (Immutable && Immutable.fromJS) {
+                extendDeep(Data.prototype, ImmutableDataMethods);
+                this._context = Immutable.fromJS(this._context);
+                this.isImmutable = true;
+                return true;
+            }
+            return false;
+        },
+        usePure: function() {
+            if (this.isImmutable) {
+                extendDeep(Data.prototype, pureMethods);
+                this._context = this._context.toJS();
+                this.isImmutable = false;
+                return true;
+            } else {
+                return false;
+            }
         }
-    });
+    };
+    
+    //扩展Data原型
+    extendDeep(Data.prototype, pureMethods);
     
     //新建默认数据中心
     var data = new Data();
-    
+
+    var Immutable;
+
     //扩展Data接口
     extendDeep(Data, {
         version: '0.2.1',
@@ -361,8 +420,65 @@
         },
         _clear: function () {
             return data._clear();
+        },
+        tryUseImmutable: function(immutableLib) {
+            return data.tryUseImmutable(immutableLib);
+        },
+        usePure: function() {
+            return data.usePure();
         }
     });
+
+    var ImmutableDataMethods = {
+        _init: function () {
+            this._context = Immutable.Map();
+            this._events = {
+                'set': {},
+                'delete': {},
+                'add': {},
+                'update': {}
+            };
+        },
+        has: function (key) {
+            return !!this.get(key);
+        },
+        get: function (key) {
+            return this._context.getIn(parseKey(key));
+        },
+        set: function (key, val) {
+            if (typeof key !== 'string') { return false; }
+
+            function isImmutable(keys) {
+                return !!that._context.getIn(keys).get;
+            }
+
+            var keys = parseKey(key),
+                lastKey = parseKey(key),
+                that = this,
+                ctx = this._context;
+
+            if (typeof val === 'undefined') {
+                this._context = ctx.removeIn(keys);
+            } else if (!isArr(val) && !isObj(val)) {
+                this._context = ctx.removeIn(keys);
+                this._context = this._context.setIn(keys, val);
+            } else {
+                // find the last one with nonempty value
+                while (lastKey.length > 0 && !ctx.getIn(lastKey)) {
+                    lastKey.pop();
+                }
+                // remove the last one with nonempty value which is not immutable object
+                if (lastKey.length > 0 && !isImmutable(lastKey)) { this._context = ctx.removeIn(lastKey); }
+                var originalObject = this.get(key);
+                this._context = this._context.setIn(keys, originalObject ?
+                    originalObject.mergeDeep(val) : Immutable.fromJS(val));
+            }
+
+            triggerEventsForImmutable(key, this._events, ctx.getIn(keys), this._context.getIn(keys), val);
+
+            return true;
+        }
+    };
     
     return Data;//return Data
 }));

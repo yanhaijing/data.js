@@ -10,12 +10,14 @@
     <div id="mocha"></div>
     <script src="mocha.js"></script>
     <script src="expect.js"></script>
+    <script src="../../lib/immutable.min.js"></script>
     <script>mocha.setup('bdd');</script>
     <script src="../../data.js"></script>
     <script>
       var libs = {
         'expect.js': expect,
-        '../data.js': Data
+        '../data.js': Data,
+        'immutable': Immutable
       };
       var require = function(path) {
         return libs[path];
