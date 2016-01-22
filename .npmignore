@@ -1,0 +1,11 @@
+demo
+doc
+lib
+test
+node_modules
+.gitignore
+.jshintrc
+.travis.yml
+bower.json
+gulpfile.js
+CHANGELOG.md
