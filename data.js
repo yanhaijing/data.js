@@ -1,5 +1,5 @@
 /*!
- * data.js v0.2.1 (https://github.com/yanhaijing/data.js)
+ * data.js v0.3.0 (https://github.com/yanhaijing/data.js)
  * Copyright 2013 yanhaijing. All Rights Reserved
  * Licensed under MIT (https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt)
  */
@@ -343,7 +343,7 @@
     
     //扩展Data接口
     extendDeep(Data, {
-        version: '0.2.1',
+        version: '0.3.0',
         has: function (key) {
             return data.has(key);
         },
