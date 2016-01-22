@@ -99,7 +99,7 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 
 ### 发布Bower
 	
-	$ bower register template.js git://github.com/yanhaijing/data.js.git
+	$ bower register data.js git://github.com/yanhaijing/data.js.git
 
 
 ## 贡献者
