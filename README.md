@@ -88,6 +88,20 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 	$ npm install -g gulp@~3.9.0 # 安装gulp
 	# gulp lint # 验证代码风格
 
+### 发布npm
+	
+	$ npm publish
+
+### 发布spm
+临时将package.json中的名字修改为 data.js	
+
+	$ spm publish
+
+### 发布Bower
+	
+	$ bower register template.js git://github.com/yanhaijing/data.js.git
+
+
 ## 贡献者
 
 - [yanhaijing](http://yanhaijing.com "yanhaijing's Blog")
