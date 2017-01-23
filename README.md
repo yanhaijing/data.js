@@ -1,4 +1,4 @@
-# [data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.3.0-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.3.0) [![spm package](http://spmjs.io/badge/data.js)](http://spmjs.io/package/data.js)
+# [data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.3.0-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.3.0) [![spm package](http://spmjs.io/badge/data.js)](http://spmjs.io/package/data.js) [![CDNJS](https://img.shields.io/cdnjs/v/data.js.svg)](https://cdnjs.com/libraries/data.js)
 
 data.js 是带有消息通知的数据中心，我称其为会说话的数据。旨在让编程变得简单，世界变得美好。
 
