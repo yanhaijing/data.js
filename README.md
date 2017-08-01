@@ -1,4 +1,4 @@
-# [data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.3.0-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.3.0) [![spm package](http://spmjs.io/badge/data.js)](http://spmjs.io/package/data.js)
+# [data.js](https://github.com/yanhaijing/data.js) [![Build Status](https://travis-ci.org/yanhaijing/data.js.svg?branch=master)](https://travis-ci.org/yanhaijing/data.js) [![license](http://img.shields.io/npm/l/express.svg)](https://github.com/yanhaijing/data.js/blob/master/MIT-LICENSE.txt) [![release](https://img.shields.io/badge/release-v0.3.0-orange.svg)](https://github.com/yanhaijing/data.js/releases/tag/v0.3.0)
 
 data.js 是带有消息通知的数据中心，我称其为会说话的数据。旨在让编程变得简单，世界变得美好。
 
@@ -13,38 +13,36 @@ data.js 是带有消息通知的数据中心，我称其为会说话的数据。
 - Safari 6+ (Mac)
 - iOS 5+ Safari
 - Chrome 23+ (Windows, Mac, Android, iOS, Linux, Chrome OS)
-- Firefox 4+ (Windows, Mac, Android, Linux, Firefox OS)
+- Firefox 4+ (Windows, Mac, Android, Linux)
 - Internet Explorer 6+ (Windows, Windows Phone)
 - Opera 10+ (Windows, linux, Android)
 
+## 下载
+第一种方法，推荐使用npm安装和更新
+	
+	$ npm install data_js
+
+第二种方法，或者你也可以在GitHub，下载源文件或压缩包
+
 ## 如何使用？
+支持全局变量、AMD、commonjs、es6等模块系统
 
 ### 传统用法
-
-	//在程序的最开始处添加如下js
+	
 	<script src="data.js"></script>
+	<script>
+		window.Data
+	</script>
 
 ### AMD
 
 	require(['data'], function (Data) {
-		***
+		Data
 	});
 
-### Bower
+### commonjs
 
-    $ bower install data.js
-    $ bower install git://github.com/yanhaijing/data.js.git
-
-### spm
-
-```bash
-$ spm install data.js
-```
-
-### npm
-
-	$ npm install data_js
-	$ npm install yanhaijing/data.js
+	var Data = require('data_js')
 
 ## 快速上手
 
@@ -91,16 +89,6 @@ data.js的存入和取出，都是对数据的一次深拷贝，同时还要解�
 ### 发布npm
 	
 	$ npm publish
-
-### 发布spm
-临时将package.json中的名字修改为 data.js	
-
-	$ spm publish
-
-### 发布Bower
-	
-	$ bower register data.js git://github.com/yanhaijing/data.js.git
-
 
 ## 贡献者
 
