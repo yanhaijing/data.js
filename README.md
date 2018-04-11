@@ -20,7 +20,7 @@ data.js 是带有消息通知的数据中心，我称其为会说话的数据。
 ## 下载
 第一种方法，推荐使用npm安装和更新
 	
-	$ npm install data_js
+	$ npm install --save data_js
 
 第二种方法，或者你也可以在GitHub，下载源文件或压缩包
 
